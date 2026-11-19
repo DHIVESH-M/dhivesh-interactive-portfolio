@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { verifiedCertifications, hackathons, achievementsByNumbers } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
 
@@ -123,22 +123,151 @@ export default function CertificatesSection() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
             {achievementsByNumbers.map((a, idx) => (
-              <div
-                key={idx}
-                onMouseEnter={playHoverSound}
-                className="p-8 rounded-2xl glass-panel border border-white/10 card-3d-interactive text-center space-y-2 group"
-              >
-                <div className="text-4xl sm:text-5xl font-black grad-text font-heading group-hover:scale-105 transition-transform">
-                  {a.num}{a.suffix}
-                </div>
-                <div className="text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
-                  {a.label}
-                </div>
-              </div>
+              <FallingNumberCard
+                key={a.label}
+                item={a}
+                index={idx}
+              />
             ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+// Interactive Number Card with Falling Cascade & Digital Rain Animation
+function FallingNumberCard({ item, index }) {
+  const [hasLanded, setHasLanded] = useState(false);
+  const [currentNum, setCurrentNum] = useState(0);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasLanded(true);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '120px' }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth numeric counter synchronized with the falling reel
+  useEffect(() => {
+    if (!hasLanded) return;
+
+    const duration = 1200; // 1.2s
+    const startTime = performance.now() + index * 160;
+    let animId;
+
+    const step = (currentTime) => {
+      if (currentTime < startTime) {
+        animId = requestAnimationFrame(step);
+        return;
+      }
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCurrentNum(Math.round(eased * item.num));
+
+      if (progress < 1) {
+        animId = requestAnimationFrame(step);
+      } else {
+        setCurrentNum(item.num);
+      }
+    };
+
+    animId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animId);
+  }, [hasLanded, item.num, index]);
+
+  const digits = String(item.num).split('');
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseEnter={playHoverSound}
+      className={`relative p-8 rounded-2xl glass-panel border border-white/10 card-3d-interactive text-center space-y-2 group overflow-hidden transition-all duration-700 ${
+        hasLanded ? 'opacity-100 translate-y-0 shadow-[0_15px_35px_rgba(0,245,255,0.15)]' : 'opacity-0 -translate-y-8'
+      }`}
+      style={{
+        transitionDelay: `${index * 140}ms`,
+      }}
+    >
+      {/* Background Falling Digital Matrix Stream */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
+        <div className="absolute inset-0 flex justify-around text-[10px] font-mono text-cyan-400 select-none">
+          <span className="data-stream-digit" style={{ animationDelay: `${index * 0.4}s` }}>1</span>
+          <span className="data-stream-digit" style={{ animationDelay: `${index * 0.4 + 0.8}s` }}>0</span>
+          <span className="data-stream-digit" style={{ animationDelay: `${index * 0.4 + 1.6}s` }}>{item.num % 10}</span>
+          <span className="data-stream-digit" style={{ animationDelay: `${index * 0.4 + 0.3}s` }}>1</span>
+        </div>
+      </div>
+
+      {/* Main Number Falling Reel Container */}
+      <div className="relative z-10 flex items-center justify-center font-heading font-black text-4xl sm:text-5xl grad-text drop-shadow-[0_0_25px_rgba(0,245,255,0.4)]">
+        {digits.map((digitChar, dIdx) => (
+          <div
+            key={dIdx}
+            className="inline-block relative overflow-hidden h-12 sm:h-14 leading-[3rem] sm:leading-[3.5rem]"
+          >
+            {hasLanded ? (
+              <div
+                className="animate-number-fall will-change-transform"
+                style={{
+                  animationDelay: `${index * 150 + dIdx * 100}ms`
+                }}
+              >
+                {/* Visual Falling Cascade Stream */}
+                <span className="block text-transparent bg-clip-text grad-text">
+                  {currentNum !== 0 ? digitChar : digitChar}
+                </span>
+              </div>
+            ) : (
+              <span className="opacity-0 translate-y-[-120%] block">{digitChar}</span>
+            )}
+          </div>
+        ))}
+
+        {/* Number Suffix (+), Pulsing on Landing */}
+        {item.suffix && (
+          <span
+            className={`text-cyan-400 ml-1 text-3xl sm:text-4xl transition-all duration-500 font-sans ${
+              hasLanded ? 'opacity-100 scale-100 animate-pulse' : 'opacity-0 scale-50'
+            }`}
+            style={{
+              transitionDelay: `${index * 150 + digits.length * 100 + 100}ms`
+            }}
+          >
+            {item.suffix}
+          </span>
+        )}
+      </div>
+
+      {/* Category Metric Label */}
+      <div className="relative z-10 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold group-hover:text-cyan-300 transition-colors">
+        {item.label}
+      </div>
+
+      {/* Bottom Subtle Accent Glow Line */}
+      <div
+        className={`h-0.5 w-12 mx-auto rounded-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent transition-all duration-700 ${
+          hasLanded ? 'opacity-80 w-16' : 'opacity-0 w-4'
+        }`}
+        style={{
+          transitionDelay: `${index * 150 + 400}ms`
+        }}
+      />
+    </div>
   );
 }

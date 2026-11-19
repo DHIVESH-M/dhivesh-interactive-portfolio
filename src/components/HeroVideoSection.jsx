@@ -6,10 +6,6 @@ import { playShatterSound, playHoverSound } from '../utils/audio';
 import Hero3DCanvas from './3d/Hero3DCanvas';
 import { 
   ChevronDown, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Sliders, 
   Zap 
 } from 'lucide-react';
 
@@ -23,7 +19,6 @@ export default function HeroVideoSection() {
   const hasShatteredRef = useRef(false);
 
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [hasShattered, setHasShattered] = useState(false);
   const [cursorTarget, setCursorTarget] = useState({ active: false, x: 0, y: 0 });
 
@@ -137,13 +132,8 @@ export default function HeroVideoSection() {
       }
     };
 
-    const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
-
     video.addEventListener('loadedmetadata', onLoadedMetadata);
     video.addEventListener('seeked', onSeeked);
-    video.addEventListener('play', onPlay);
-    video.addEventListener('pause', onPause);
 
     // If metadata already loaded
     if (video.readyState >= 1) {
@@ -153,8 +143,6 @@ export default function HeroVideoSection() {
     return () => {
       video.removeEventListener('loadedmetadata', onLoadedMetadata);
       video.removeEventListener('seeked', onSeeked);
-      video.removeEventListener('play', onPlay);
-      video.removeEventListener('pause', onPause);
     };
   }, []);
 
@@ -199,35 +187,6 @@ export default function HeroVideoSection() {
       st.kill();
     };
   }, []);
-
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    playHoverSound();
-    if (video.paused) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  };
-
-  const handleManualSlider = (e) => {
-    const val = parseFloat(e.target.value);
-    setScrollProgress(val);
-    const video = videoRef.current;
-    if (video && video.duration) {
-      safeSeek(val * video.duration);
-    }
-  };
-
-  const restartVideo = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    playHoverSound();
-    safeSeek(0.01);
-    setScrollProgress(0);
-    setHasShattered(false);
-  };
 
   const scrollToShatter = () => {
     const trigger = triggerRef.current;
@@ -416,45 +375,6 @@ export default function HeroVideoSection() {
             <span>Explore Full Technical Portfolio</span>
             <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
           </button>
-        </div>
-      </div>
-
-      {/* 5. INTERACTIVE CINEMATIC VIDEO & SCRUB CONTROLLER */}
-      <div className="absolute bottom-4 left-6 z-30 pointer-events-auto flex items-center gap-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-950/85 border border-cyan-500/30 backdrop-blur-xl shadow-lg shadow-black/60">
-          <button
-            onClick={togglePlay}
-            title={isPlaying ? "Pause Video" : "Play Full Cinematic"}
-            className="p-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 transition-colors"
-          >
-            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-          </button>
-
-          <button
-            onClick={restartVideo}
-            title="Restart Video Frame"
-            className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Interactive Frame Scrub Slider */}
-          <div className="flex items-center gap-2 px-1">
-            <Sliders className="w-3 h-3 text-cyan-400" />
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.005"
-              value={scrollProgress}
-              onChange={handleManualSlider}
-              className="w-24 sm:w-32 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-              title="Drag to manually scrub video frames"
-            />
-            <span className="text-[10px] font-mono text-slate-400 w-8">
-              {Math.round(scrollProgress * 100)}%
-            </span>
-          </div>
         </div>
       </div>
 

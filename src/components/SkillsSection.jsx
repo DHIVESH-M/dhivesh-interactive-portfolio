@@ -6,7 +6,7 @@ import HandDrawnSkillFlow from './HandDrawnSkillFlow';
 export default function SkillsSection({ isReducedMotion = false }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const sectionRef = useRef(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(true);
 
   // Trigger skill bar animation on entering viewport
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function SkillsSection({ isReducedMotion = false }) {
           }
         });
       },
-      { threshold: 0.01, rootMargin: '150px' }
+      { threshold: 0.01, rootMargin: '300px' }
     );
 
     if (sectionRef.current) {
@@ -127,13 +127,13 @@ export default function SkillsSection({ isReducedMotion = false }) {
 
 // Individual Skill Card with Animated Progress Line & Moving Highlight
 function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
-  const [currentPct, setCurrentPct] = useState(0);
+  const [currentPct, setCurrentPct] = useState(isReducedMotion ? skill.pct : Math.max(1, Math.round(skill.pct * 0.2)));
 
   useEffect(() => {
-    if (!hasAnimated || isReducedMotion) return;
+    if (isReducedMotion) return;
 
-    const duration = 1400; // 1.4s
-    const startTime = performance.now() + delay * 1000;
+    const duration = 1200; // 1.2s smooth fluid animation
+    const startTime = performance.now() + (delay || 0) * 350;
     let animId;
 
     const animate = (currentTime) => {
@@ -146,10 +146,12 @@ function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
       // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       const val = Math.round(eased * skill.pct);
-      setCurrentPct(val);
+      setCurrentPct(Math.max(val, 1));
 
       if (progress < 1) {
         animId = requestAnimationFrame(animate);
+      } else {
+        setCurrentPct(skill.pct);
       }
     };
 
@@ -157,7 +159,7 @@ function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
     return () => cancelAnimationFrame(animId);
   }, [hasAnimated, skill.pct, delay, isReducedMotion]);
 
-  const displayPct = isReducedMotion && hasAnimated ? skill.pct : currentPct;
+  const displayPct = isReducedMotion ? skill.pct : (currentPct || skill.pct);
 
   return (
     <div
@@ -217,9 +219,12 @@ function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
         </div>
 
         {/* Track Subtext */}
-        <div className="flex justify-between text-[10px] font-mono text-slate-400">
-          <span>0%</span>
-          <span className="text-[#00f5ff] font-semibold">Target: {skill.pct}%</span>
+        <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
+          <span className="flex items-center gap-1.5 text-cyan-400/80">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            Proficiency Gauge
+          </span>
+          <span className="text-[#00f5ff] font-bold">{displayPct}% Verified</span>
         </div>
       </div>
     </div>

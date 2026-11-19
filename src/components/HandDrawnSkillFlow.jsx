@@ -113,11 +113,15 @@ export default function HandDrawnSkillFlow() {
   const containerRef = useRef(null);
   const pathRef = useRef(null);
   const glowPathRef = useRef(null);
+  const rocketRef = useRef(null);
+  const mobileRocketRef = useRef(null);
 
   useEffect(() => {
     const path = pathRef.current;
     const glowPath = glowPathRef.current;
     const container = containerRef.current;
+    const rocket = rocketRef.current;
+    const mobileRocket = mobileRocketRef.current;
     if (!path || !container) return;
 
     const pathLength = path.getTotalLength();
@@ -130,22 +134,57 @@ export default function HandDrawnSkillFlow() {
       glowPath.style.strokeDashoffset = `${pathLength}`;
     }
 
+    // Master function to sync the rocket and path with scroll progress
+    const updateRocket = (progress) => {
+      const p = Math.max(0, Math.min(1, progress));
+      const offset = pathLength * (1 - p);
+      path.style.strokeDashoffset = `${offset}`;
+      if (glowPath) {
+        glowPath.style.strokeDashoffset = `${offset}`;
+      }
+
+      // Desktop Rocket position & tangent angle
+      if (rocket) {
+        const len = p * pathLength;
+        const pt = path.getPointAtLength(len);
+        const p1 = path.getPointAtLength(Math.max(0, len - 3));
+        const p2 = path.getPointAtLength(Math.min(pathLength, len + 3));
+        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
+
+        rocket.style.opacity = '1';
+        rocket.setAttribute('transform', `translate(${pt.x.toFixed(2)}, ${pt.y.toFixed(2)}) rotate(${angle.toFixed(2)}) scale(2.2)`);
+      }
+
+      // Mobile Rocket follower
+      if (mobileRocket) {
+        mobileRocket.style.top = `${(p * 96 + 2).toFixed(1)}%`;
+        mobileRocket.style.opacity = '1';
+      }
+    };
+
+    // Position rocket immediately at the start of the path so it is never hidden
+    updateRocket(0);
+
     const st = ScrollTrigger.create({
       trigger: container,
-      start: 'top 80%',
-      end: 'bottom 75%',
-      scrub: 0.8,
+      start: 'top 85%',
+      end: 'bottom 65%',
+      scrub: 0.6,
       onUpdate: (self) => {
-        const p = self.progress;
-        const offset = pathLength * (1 - p);
-        path.style.strokeDashoffset = `${offset}`;
-        if (glowPath) {
-          glowPath.style.strokeDashoffset = `${offset}`;
-        }
+        updateRocket(self.progress);
       }
     });
 
-    return () => st.kill();
+    // Refresh ScrollTrigger once everything is mounted
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+      updateRocket(st.progress || 0);
+    }, 250);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      st.kill();
+    };
   }, []);
 
   return (
@@ -191,6 +230,40 @@ export default function HandDrawnSkillFlow() {
               <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
               <stop offset="100%" stopColor="#00f0ff" stopOpacity="0" />
             </radialGradient>
+
+            {/* Rocket Thruster & Hull Gradients */}
+            <linearGradient id="rocketFuselageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0b1329" />
+              <stop offset="45%" stopColor="#1e293b" />
+              <stop offset="85%" stopColor="#e2e8f0" />
+              <stop offset="100%" stopColor="#ffffff" />
+            </linearGradient>
+
+            <linearGradient id="rocketFlameGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="25%" stopColor="#00f5ff" />
+              <stop offset="65%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="rocketCanopyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#00f5ff" />
+              <stop offset="100%" stopColor="#3b82f6" />
+            </linearGradient>
+
+            <radialGradient id="rocketThrusterGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.8" />
+              <stop offset="45%" stopColor="#f59e0b" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+
+            <filter id="rocketGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
 
           {/* Background Guide Line (Faint dotted sketch) */}
@@ -225,10 +298,93 @@ export default function HandDrawnSkillFlow() {
             filter="url(#handSketchFilter)"
             fill="none"
           />
+
+          {/* Animated 3D Cyber Rocket Surfing Along the Path Tangent */}
+          <g ref={rocketRef} id="journeyRocket" className="pointer-events-none" style={{ opacity: 1, willChange: 'transform' }}>
+            {/* Pulsating HUD Orbit Reticle */}
+            <circle cx="10" cy="0" r="32" fill="none" stroke="#00f5ff" strokeWidth="1" strokeDasharray="5 5" opacity="0.6" />
+            <text x="10" y="-36" fill="#00f5ff" fontFamily="'JetBrains Mono', monospace" fontSize="9" fontWeight="800" textAnchor="middle" filter="drop-shadow(0 0 6px #00f5ff)">
+              ▲ TRAJECTORY ROCKET
+            </text>
+
+            {/* Plasma Thruster Radiant Energy Halo */}
+            <circle cx="-18" cy="0" r="42" fill="url(#rocketThrusterGlow)" opacity="0.9" />
+            
+            {/* Dynamic Plasma Exhaust Flame (Pointing to -X) */}
+            <g className="animate-pulse">
+              {/* Outer Amber/Orange Thermal Expansion */}
+              <path
+                d="M -16 -9 Q -45 -7 -70 0 Q -45 7 -16 9 Z"
+                fill="url(#rocketFlameGrad)"
+                filter="url(#rocketGlowFilter)"
+              />
+              {/* Electric Cyan Jet Stream Core */}
+              <path
+                d="M -16 -5 Q -36 -2.5 -52 0 Q -36 2.5 -16 5 Z"
+                fill="#00f5ff"
+                filter="url(#rocketGlowFilter)"
+              />
+              {/* Superheated White-Hot Core */}
+              <path
+                d="M -16 -2.5 Q -28 -1 -38 0 Q -28 1 -16 2.5 Z"
+                fill="#ffffff"
+              />
+            </g>
+
+            {/* Spark Trail Stardust Particles */}
+            <circle cx="-76" cy="-4" r="2.4" fill="#00f5ff" opacity="0.9" filter="drop-shadow(0 0 4px #00f5ff)" />
+            <circle cx="-92" cy="5" r="1.8" fill="#38bdf8" opacity="0.7" />
+            <circle cx="-108" cy="-3" r="1.4" fill="#f59e0b" opacity="0.6" />
+            <circle cx="-124" cy="2" r="1" fill="#ef4444" opacity="0.4" />
+
+            {/* Delta Wings & Stabilizers */}
+            <path d="M -6 -9 L -22 -24 L -15 -9 Z" fill="#0369a1" stroke="#38bdf8" strokeWidth="1.5" />
+            <path d="M -16 -17 L -6 -9" stroke="#00f5ff" strokeWidth="1.2" />
+            
+            <path d="M -6 9 L -22 24 L -15 9 Z" fill="#0369a1" stroke="#38bdf8" strokeWidth="1.5" />
+            <path d="M -16 17 L -6 9" stroke="#00f5ff" strokeWidth="1.2" />
+
+            {/* Engine Bell Nozzle */}
+            <rect x="-19" y="-6.5" width="5" height="13" rx="2" fill="#1e293b" stroke="#00f5ff" strokeWidth="1.2" />
+
+            {/* Main Fuselage Body */}
+            <path
+              d="M -16 -10.5 L 9 -10.5 Q 30 -7.5 42 0 Q 30 7.5 9 10.5 L -16 10.5 Z"
+              fill="url(#rocketFuselageGrad)"
+              stroke="#00f5ff"
+              strokeWidth="2"
+              filter="drop-shadow(0 0 14px rgba(0, 245, 255, 0.9))"
+            />
+
+            {/* Cyber Armor Seams */}
+            <line x1="-3" y1="-9.5" x2="-3" y2="9.5" stroke="rgba(0, 245, 255, 0.7)" strokeWidth="1.2" />
+            <line x1="10" y1="-9" x2="10" y2="9" stroke="rgba(0, 245, 255, 0.5)" strokeWidth="1.2" />
+
+            {/* Cockpit Canopy Window */}
+            <ellipse cx="16" cy="0" rx="8.5" ry="4.5" fill="url(#rocketCanopyGrad)" stroke="#38bdf8" strokeWidth="1.4" />
+            <ellipse cx="18" cy="-1.5" rx="4" ry="1.6" fill="#ffffff" opacity="0.95" />
+
+            {/* Racing Speed Stripe */}
+            <line x1="-12" y1="0" x2="5" y2="0" stroke="#f43f5e" strokeWidth="2.2" strokeLinecap="round" />
+
+            {/* Nose Tip Laser Beacon Sparkle */}
+            <circle cx="42" cy="0" r="3" fill="#ffffff" filter="drop-shadow(0 0 10px #00f5ff)" />
+          </g>
         </svg>
 
-        {/* Mobile Vertical Flow Spine */}
+        {/* Mobile Vertical Flow Spine & Mobile Rocket Follower */}
         <div className="absolute left-6 top-4 bottom-4 w-1 bg-gradient-to-b from-cyan-400 via-blue-500 to-amber-400 md:hidden rounded-full shadow-[0_0_12px_rgba(0,240,255,0.6)]" />
+        
+        {/* Mobile Animated Rocket Icon */}
+        <div
+          ref={mobileRocketRef}
+          className="absolute left-6 -translate-x-1/2 md:hidden z-30 pointer-events-none transition-all duration-75"
+          style={{ top: '2%', opacity: 1 }}
+        >
+          <div className="w-9 h-9 rounded-full bg-[#070b18] border-2 border-cyan-400 shadow-[0_0_20px_#00f5ff] flex items-center justify-center text-base rotate-90">
+            🚀
+          </div>
+        </div>
 
         {/* Skill Milestone Cards positioned along the path */}
         <div className="relative z-10 space-y-12 md:space-y-20">

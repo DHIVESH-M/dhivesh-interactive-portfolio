@@ -29,26 +29,27 @@ export const skillsWithPercentages = [
   {
     category: "Programming",
     skills: [
-      { id: "java", name: "Java", pct: 75, icon: "fa-mug-hot", desc: "Object-oriented programming, data structures, application logic, and algorithm design.", status: "Core Expertise" },
+      { id: "java", name: "Java", pct: 60, icon: "fa-mug-hot", desc: "Object-oriented programming, data structures, application logic, and algorithm design.", status: "Core Expertise" },
       { id: "c", name: "C", pct: 70, icon: "fa-code", desc: "Low-level memory management, systems programming, and embedded firmware logic.", status: "Foundational" },
-      { id: "python", name: "Python", pct: 80, icon: "fa-python", desc: "Data processing, machine learning workflows, automation scripts, and neural model prototyping.", status: "Core Language" }
+      { id: "python", name: "Python", pct: 60, icon: "fa-python", desc: "Data processing, machine learning workflows, automation scripts, and neural model prototyping.", status: "Core Language" }
     ]
   },
   {
     category: "AI & Machine Learning",
     skills: [
       { id: "ai-models", name: "AI Model Building", pct: 75, icon: "fa-brain", desc: "Developing custom neural architectures, fine-tuning hyperparameters, and model evaluation.", status: "Applied Domain" },
-      { id: "ml", name: "Machine Learning", pct: 72, icon: "fa-robot", desc: "Supervised and unsupervised learning, regression, classification, and feature engineering.", status: "Applied Domain" },
+      { id: "ml", name: "Machine Learning", pct: 40, icon: "fa-robot", desc: "Supervised and unsupervised learning, regression, classification, and feature engineering.", status: "Applied Domain" },
       { id: "realtime-ai", name: "Real-Time AI Projects", pct: 70, icon: "fa-bolt", desc: "Integrating intelligent decision models into real-time pipelines, sensor streams, and edge systems.", status: "Applied Systems" }
     ]
   },
   {
     category: "Creative & Development Tools",
     skills: [
+      { id: "github", name: "GitHub & Git", pct: 90, icon: "fa-github", desc: "Distributed version control, collaborative team branching, repository architecture, and CI/CD automation.", status: "Core Workflow" },
       { id: "blender", name: "Blender", pct: 55, icon: "fa-cube", desc: "3D polygonal modeling, asset creation, scene composition, and spatial texturing.", status: "Intermediate" },
       { id: "illustrator", name: "Adobe Illustrator", pct: 85, icon: "fa-palette", desc: "Vector graphics creation, visual brand identity, UI iconography, and technical schematics.", status: "Intermediate" },
       { id: "unity", name: "Unity — Learning", pct: 40, icon: "fa-gamepad", desc: "Exploring real-time 3D simulation, interactive physics, and virtual game mechanics.", status: "Active Learning" },
-      { id: "aws", name: "AWS — Learning", pct: 45, icon: "fa-cloud", desc: "Understanding cloud computing instances, S3 storage, and deployment fundamentals.", status: "Active Learning" }
+      { id: "aws", name: "AWS — Learning", pct: 10, icon: "fa-cloud", desc: "Understanding cloud computing instances, S3 storage, and deployment fundamentals.", status: "Active Learning" }
     ]
   }
 ];
@@ -93,7 +94,7 @@ export const featuredProjects = [
     category: "AI & Machine Learning",
     tagline: "Personalized AI Learning & Adaptive Career Gap Intelligence",
     description: "An AI-powered learning and skill development platform designed with multi-agent orchestration. Analyzes user proficiency distributions, maps market-driven career gap metrics, and curates personalized bite-sized learning roadmaps with interactive visualizations.",
-    image: "/assets/projects/skillpath-ai.svg",
+    image: "/assets/projects/skillpath-ai.jpg",
     status: "Active Prototype",
     featured: true,
     technologies: ["AI Model Development", "Machine Learning", "Real-time AI", "Multi-Agent System"],
@@ -114,7 +115,7 @@ export const featuredProjects = [
     category: "AI & Machine Learning",
     tagline: "Intelligent Personal Assistant with Cognitive Interaction & Memory",
     description: "A comprehensive personal AI assistant featuring voice interaction, curated intelligence briefings, semantic memory retention, and proactive task assistance tailored to daily developer productivity.",
-    image: "/assets/projects/mindspace-ai.svg",
+    image: "/assets/projects/mindspace-ai.jpg",
     status: "Active Development",
     featured: true,
     technologies: ["AI Model Development", "Real-time AI Projects", "Voice Computing", "Python"],
@@ -135,7 +136,7 @@ export const featuredProjects = [
     category: "Web & Platforms",
     tagline: "Decentralized Workforce Connection for Local Workers & Merchants",
     description: "A digital multi-sided platform concept connecting blue-collar workers, local field agents, and local shop owners. Streamlines on-demand service dispatch, local employment discovery, and merchant supply chains.",
-    image: "/assets/projects/worqiz.svg",
+    image: "/assets/projects/worqiz.jpg",
     status: "Concept & Prototype",
     featured: true,
     technologies: ["Java", "System Design", "Database Modeling", "Application Logic"],
@@ -156,7 +157,7 @@ export const featuredProjects = [
     category: "IoT & Hardware",
     tagline: "Smart Wastewater Intelligence & Microfiber Particle Monitoring",
     description: "A smart environmental IoT filtration and telemetry project created for the Smart India Hackathon (SIH). Intercepts microplastic and microfiber pollution from commercial washing machine effluent using multi-stage filtration and real-time turbidity/sensor telemetry.",
-    image: "/assets/projects/aquashield.svg",
+    image: "/assets/projects/aquashield.jpg",
     status: "SIH Finalist / Research",
     featured: true,
     technologies: ["C", "Real-time AI Projects", "Blender", "IoT & Embedded C"],
@@ -177,7 +178,7 @@ export const featuredProjects = [
     category: "Web & Platforms",
     tagline: "Direct Rural Agricultural Marketplace for Farmers & Buyers",
     description: "A rural agricultural marketplace platform connecting local farmers directly with bulk buyers, urban consumers, and cooperative markets. Eliminates exploitative intermediary layers and ensures fair trade transparency.",
-    image: "/assets/projects/namma-ooru-vivasai.svg",
+    image: "/assets/projects/namma-ooru-vivasai.jpg",
     status: "Prototype Tested",
     featured: true,
     technologies: ["Java", "System Architecture", "Adobe Illustrator", "Data Flow"],
@@ -198,7 +199,7 @@ export const featuredProjects = [
     category: "IoT & Hardware",
     tagline: "Emergency Crash Detection & Automated Highway Beaconing System",
     description: "An emergency road safety hardware project engineered for rapid highway accident response. Combines accelerometer impact sensors, GPS telemetry, and automatic SOS beacon dispatch to notify emergency responders within seconds of an incident.",
-    image: "/assets/projects/road-safety-sos.svg",
+    image: "/assets/projects/road-safety-sos.jpg",
     status: "Hardware Prototype",
     featured: true,
     technologies: ["C", "Real-time AI Projects", "Embedded Systems", "Hardware Architecture"],
@@ -298,8 +299,8 @@ export const verifiedCertifications = [
 export const achievementsByNumbers = [
   { num: 6, label: "Projects Completed", suffix: "+" },
   { num: 6, label: "Certificates Earned", suffix: "" },
-  { num: 10, label: "Hackathons & Challenges", suffix: "+" },
-  { num: 10, label: "GitHub Repositories", suffix: "+" }
+  { num: 18, label: "Hackathons & Challenges", suffix: "+" },
+  { num: 32, label: "GitHub Repositories", suffix: "+" }
 ];
 
 export const educationInfo = {
@@ -311,13 +312,14 @@ export const educationInfo = {
 
 // 3D Glass Fragments with Real Skills for Hero Video Reveal
 export const heroGlassFragments = [
-  { id: 1, label: "Java", category: "Programming", top: "18%", left: "14%", rotate: "-8deg", delay: 0.1 },
-  { id: 2, label: "Python", category: "Programming", top: "22%", left: "46%", rotate: "4deg", delay: 0.2 },
+  { id: 1, label: "Java (60%)", category: "Programming", top: "18%", left: "14%", rotate: "-8deg", delay: 0.1 },
+  { id: 2, label: "Python (60%)", category: "Programming", top: "22%", left: "46%", rotate: "4deg", delay: 0.2 },
   { id: 3, label: "C Language", category: "Programming", top: "26%", left: "78%", rotate: "12deg", delay: 0.3 },
   { id: 4, label: "AI Model Building", category: "Artificial Intelligence", top: "42%", left: "10%", rotate: "6deg", delay: 0.4 },
-  { id: 5, label: "Real-Time AI Projects", category: "Artificial Intelligence", top: "68%", left: "16%", rotate: "-14deg", delay: 0.5 },
+  { id: 5, label: "Machine Learning (40%)", category: "Artificial Intelligence", top: "68%", left: "16%", rotate: "-14deg", delay: 0.5 },
   { id: 6, label: "Blender 3D", category: "Creative Tools", top: "54%", left: "84%", rotate: "-6deg", delay: 0.6 },
-  { id: 7, label: "Unity — Learning", category: "Creative Tools", top: "84%", left: "34%", rotate: "8deg", delay: 0.7 },
-  { id: 8, label: "Adobe Illustrator", category: "Design", top: "82%", left: "64%", rotate: "-10deg", delay: 0.8 },
-  { id: 9, label: "AWS — Learning", category: "Cloud", top: "72%", left: "82%", rotate: "10deg", delay: 0.9 },
+  { id: 7, label: "GitHub & Git (90%)", category: "Workflow", top: "38%", left: "80%", rotate: "-5deg", delay: 0.65 },
+  { id: 8, label: "Adobe Illustrator", category: "Design", top: "82%", left: "64%", rotate: "-10deg", delay: 0.75 },
+  { id: 9, label: "AWS — Learning (10%)", category: "Cloud", top: "74%", left: "82%", rotate: "10deg", delay: 0.85 },
+  { id: 10, label: "Unity — Learning", category: "Creative Tools", top: "84%", left: "34%", rotate: "8deg", delay: 0.9 },
 ];
