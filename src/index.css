@@ -95,6 +95,23 @@
   text-shadow: 0 0 16px rgba(168, 85, 247, 0.65), 0 0 32px rgba(168, 85, 247, 0.3);
 }
 
+/* Video Hardware Acceleration & Anti-Flicker */
+.hero-video-element {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background-color: transparent !important;
+}
+
+.hero-video-element::-webkit-media-controls {
+  display: none !important;
+}
+
+.hero-video-element::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
 /* Glassmorphism Panels */
 .glass-panel {
   background: rgba(11, 15, 28, 0.65);

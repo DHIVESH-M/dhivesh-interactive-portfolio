@@ -27,17 +27,19 @@ export default function Hero3DCanvas({ scrollProgress }) {
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
 
+    const isMobile = (container.clientWidth || window.innerWidth) < 768;
+
     const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
     camera.position.z = 50;
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: !isMobile,
       powerPreference: 'high-performance'
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
@@ -67,8 +69,8 @@ export default function Hero3DCanvas({ scrollProgress }) {
     blueRimLight.position.set(30, 20, 10);
     scene.add(blueRimLight);
 
-    // 3. Create 3D Glass Shards
-    const shardCount = 32;
+    // 3. Create 3D Glass Shards (lighter on mobile)
+    const shardCount = isMobile ? 14 : 32;
     const shards = [];
 
     // Efficient MeshStandardMaterial with high specular shine (avoids heavy transmission render targets on integrated GPUs)
@@ -218,23 +220,25 @@ export default function Hero3DCanvas({ scrollProgress }) {
 
       const shatterProgress = Math.max(0, Math.min(1, (p - 0.38) / 0.35));
 
-      shards.forEach((item) => {
-        const { mesh, initPos, targetPos, initRot, rotSpeed, baseScale } = item;
+      if (shatterProgress > 0.005) {
+        shards.forEach((item) => {
+          const { mesh, initPos, targetPos, initRot, rotSpeed, baseScale } = item;
 
-        mesh.position.lerpVectors(initPos, targetPos, shatterProgress);
-        mesh.rotation.x = initRot.x + rotSpeed.x * shatterProgress;
-        mesh.rotation.y = initRot.y + rotSpeed.y * shatterProgress;
-        mesh.rotation.z = initRot.z + rotSpeed.z * shatterProgress;
+          mesh.position.lerpVectors(initPos, targetPos, shatterProgress);
+          mesh.rotation.x = initRot.x + rotSpeed.x * shatterProgress;
+          mesh.rotation.y = initRot.y + rotSpeed.y * shatterProgress;
+          mesh.rotation.z = initRot.z + rotSpeed.z * shatterProgress;
 
-        if (shatterProgress > 0.01) {
           mesh.visible = true;
           const s = baseScale * (0.8 + shatterProgress * 0.4);
           mesh.scale.set(s, s, s);
           mesh.material.opacity = Math.min(0.9, shatterProgress * 1.5);
-        } else {
-          mesh.visible = false;
-        }
-      });
+        });
+      } else {
+        shards.forEach((item) => {
+          item.mesh.visible = false;
+        });
+      }
 
       sparkles.rotation.y += delta * 0.1;
       sparkles.rotation.x += delta * 0.05;
