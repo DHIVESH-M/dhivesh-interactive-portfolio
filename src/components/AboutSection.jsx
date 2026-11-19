@@ -70,7 +70,7 @@ export default function AboutSection() {
             {[
               {
                 title: "AI & ML Foundations",
-                meta: "2024 — Present",
+                meta: "2025 — Present",
                 desc: "Building deep core strengths in Python, Java, C, and machine learning fundamentals alongside mathematical optimization.",
                 icon: "fa-brain"
               },
@@ -242,7 +242,7 @@ function HangingKeychainIdCard() {
                 B.Sc. AI &amp; ML
               </div>
               <div className="text-[8px] font-mono text-slate-400">
-                BATCH: 2024 — 2028
+                BATCH: 2025 — 2028
               </div>
             </div>
           </div>
