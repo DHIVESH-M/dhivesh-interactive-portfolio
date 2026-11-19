@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Global3DBackground from './components/3d/Global3DBackground';
 import HeroVideoSection from './components/HeroVideoSection';
+import PortfolioShowcaseSection from './components/PortfolioShowcaseSection';
 import AboutSection from './components/AboutSection';
 import SkillsSection from './components/SkillsSection';
 import ProjectsSection from './components/ProjectsSection';
@@ -28,6 +29,9 @@ export default function App() {
       <section id="hero">
         <HeroVideoSection isReducedMotion={isReducedMotion} />
       </section>
+
+      {/* 3.5. Living Portfolio Showcase Section (Reference Animation Recreation) */}
+      <PortfolioShowcaseSection isReducedMotion={isReducedMotion} />
 
       {/* 4. About Me Section */}
       <AboutSection />
