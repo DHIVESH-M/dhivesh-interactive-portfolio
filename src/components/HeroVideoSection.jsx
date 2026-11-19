@@ -20,6 +20,8 @@ gsap.registerPlugin(ScrollTrigger);
 export default function HeroVideoSection({ isReducedMotion = false }) {
   const triggerRef = useRef(null);
   const videoRef = useRef(null);
+  const videoWrapperRef = useRef(null);
+  const reticleRef = useRef(null);
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -27,10 +29,72 @@ export default function HeroVideoSection({ isReducedMotion = false }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasShattered, setHasShattered] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [cursorTarget, setCursorTarget] = useState({ active: false, x: 0, y: 0 });
 
   const isSeekingRef = useRef(false);
   const pendingTimeRef = useRef(null);
   const targetTimeRef = useRef(0);
+
+  // Mouse tracking state for 2.5D face and head movement
+  const mousePosRef = useRef({ targetRotY: 0, targetRotX: 0, targetTransX: 0, targetTransY: 0, rawX: -100, rawY: -100 });
+  const currentTrackRef = useRef({ rotY: 0, rotX: 0, transX: 0, transY: 0 });
+
+  // Interactive face & head tracking animation loop
+  useEffect(() => {
+    let animId;
+    const handleMouseMove = (e) => {
+      const nx = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+
+      mousePosRef.current = {
+        targetRotY: nx * 14,      // Head turns horizontally towards cursor
+        targetRotX: -ny * 10,     // Head tilts vertically towards cursor
+        targetTransX: nx * 24,    // 3D parallax displacement
+        targetTransY: ny * 18,
+        rawX: e.clientX,
+        rawY: e.clientY
+      };
+
+      setCursorTarget({ active: true, x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseLeave = () => {
+      mousePosRef.current = { targetRotY: 0, targetRotX: 0, targetTransX: 0, targetTransY: 0, rawX: -100, rawY: -100 };
+      setCursorTarget({ active: false, x: 0, y: 0 });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseleave', handleMouseLeave);
+
+    const trackLoop = () => {
+      const target = mousePosRef.current;
+      const cur = currentTrackRef.current;
+
+      // Smooth lerp damping for natural head weight physics
+      cur.rotY += (target.targetRotY - cur.rotY) * 0.08;
+      cur.rotX += (target.targetRotX - cur.rotX) * 0.08;
+      cur.transX += (target.targetTransX - cur.transX) * 0.08;
+      cur.transY += (target.targetTransY - cur.transY) * 0.08;
+
+      if (videoWrapperRef.current) {
+        videoWrapperRef.current.style.transform = `scale(1.08) perspective(1200px) rotateY(${cur.rotY.toFixed(2)}deg) rotateX(${cur.rotX.toFixed(2)}deg) translate3d(${cur.transX.toFixed(1)}px, ${cur.transY.toFixed(1)}px, 0)`;
+      }
+
+      if (reticleRef.current && target.rawX > 0) {
+        reticleRef.current.style.transform = `translate3d(${target.rawX}px, ${target.rawY}px, 0)`;
+      }
+
+      animId = requestAnimationFrame(trackLoop);
+    };
+
+    animId = requestAnimationFrame(trackLoop);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
 
   // Safe seek handler that queues seek requests without aborting browser media decoders
   const safeSeek = (time) => {
@@ -181,22 +245,56 @@ export default function HeroVideoSection({ isReducedMotion = false }) {
 
   return (
     <div ref={triggerRef} className="relative w-full h-screen bg-[#07080b] overflow-hidden select-none">
-      {/* 1. BACKGROUND VIDEO LAYER */}
-      <div className="absolute inset-0 w-full h-full">
-        <video
-          ref={videoRef}
-          src="/videos/hero-glass.mp4"
-          playsInline
-          muted
-          autoPlay={false}
-          preload="auto"
-          className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
-        />
+      {/* 1. BACKGROUND VIDEO LAYER WITH 3D FACE & HEAD TRACKING */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
+        <div
+          ref={videoWrapperRef}
+          className="w-full h-full will-change-transform transition-[transform] duration-75 ease-out"
+          style={{ transformOrigin: 'center center' }}
+        >
+          <video
+            ref={videoRef}
+            src="/videos/hero-glass.mp4"
+            playsInline
+            muted
+            autoPlay={false}
+            preload="auto"
+            className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
+          />
+        </div>
 
         {/* Ambient Darkening & Radial Vignette */}
         <div className="absolute inset-0 bg-radial from-transparent via-[#07080b]/35 to-[#07080b]/90 pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07080b] to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07080b]/80 to-transparent pointer-events-none" />
+      </div>
+
+      {/* Subtle Neural Gaze Target Indicator */}
+      <div
+        ref={reticleRef}
+        className="fixed top-0 left-0 pointer-events-none z-30 -translate-x-1/2 -translate-y-1/2 will-change-transform transition-opacity duration-300"
+        style={{
+          opacity: cursorTarget.active && scrollProgress < 0.4 ? 0.85 : 0,
+          transform: 'translate3d(-100px, -100px, 0)'
+        }}
+      >
+        <div className="relative w-12 h-12 flex items-center justify-center">
+          {/* Outer Rotating Reticle */}
+          <div className="absolute inset-0 rounded-full border border-cyan-400/40 border-dashed animate-spin" style={{ animationDuration: '6s' }} />
+          {/* Inner Lock Ring */}
+          <div className="w-5 h-5 rounded-full border border-cyan-400/80 flex items-center justify-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          </div>
+          {/* Corner Lock Markers */}
+          <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-cyan-400" />
+          <div className="absolute -top-1 -right-1 w-2 h-2 border-t border-r border-cyan-400" />
+          <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b border-l border-cyan-400" />
+          <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-cyan-400" />
+          {/* Text Tag */}
+          <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[8px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap bg-[#07080b]/80 px-1 rounded">
+            GAZE LOCK
+          </span>
+        </div>
       </div>
 
       {/* 2. THREE.JS 3D GLASS SHARDS & PARTICLE EXPLOSION */}
