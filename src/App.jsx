@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
-import DogBoneCursor from './components/DogBoneCursor';
 import HeroVideoSection from './components/HeroVideoSection';
 import AboutSection from './components/AboutSection';
 import SkillsSection from './components/SkillsSection';
@@ -15,10 +14,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#07080b] text-slate-100 overflow-x-hidden">
-      {/* 1. Custom Dog Bone Cursor & Puppy Companion */}
-      <DogBoneCursor isReducedMotion={isReducedMotion} />
-
-      {/* 2. Top Navigation Bar */}
+      {/* 1. Top Navigation Bar */}
       <Navbar 
         isReducedMotion={isReducedMotion} 
         setIsReducedMotion={setIsReducedMotion} 
