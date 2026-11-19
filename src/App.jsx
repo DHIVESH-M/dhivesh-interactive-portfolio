@@ -1,57 +1,44 @@
 import React, { useState } from 'react';
+import ParticleBackground from './components/ParticleBackground';
 import Navbar from './components/Navbar';
-import Global3DBackground from './components/3d/Global3DBackground';
 import HeroVideoSection from './components/HeroVideoSection';
-import PortfolioShowcaseSection from './components/PortfolioShowcaseSection';
 import AboutSection from './components/AboutSection';
 import SkillsSection from './components/SkillsSection';
 import ProjectsSection from './components/ProjectsSection';
-import LearningJourneySection from './components/LearningJourneySection';
-import ResumeSection from './components/ResumeSection';
+import CertificatesSection from './components/CertificatesSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [isReducedMotion] = useState(false);
 
   return (
-    <div className="relative min-h-screen bg-[#07080b] text-slate-100 overflow-x-hidden">
-      {/* Ambient Three.js 3D Particle Space */}
-      <Global3DBackground />
+    <div className="relative min-h-screen bg-[#080b1a] text-[#f4f5fb] overflow-x-hidden selection:bg-[#9b6bff]/40 selection:text-white">
+      {/* Background Interactive Particle Canvas & Glowing Blobs */}
+      <ParticleBackground isReducedMotion={isReducedMotion} />
 
-      {/* 1. Top Navigation Bar */}
-      <Navbar 
-        isReducedMotion={isReducedMotion} 
-        setIsReducedMotion={setIsReducedMotion} 
-      />
+      {/* Top Navigation Bar */}
+      <Navbar />
 
-      {/* 3. Hero Section with Scroll-Controlled Google Flow Video & Glass Fragment Skills */}
-      <section id="hero">
-        <HeroVideoSection isReducedMotion={isReducedMotion} />
-      </section>
+      {/* 1. Cinematic Glass-Shooting Video Hero with 2.5D Face Tracking, 3D Glass Shards & Skill Fragments */}
+      <HeroVideoSection isReducedMotion={isReducedMotion} />
 
-      {/* 3.5. Living Portfolio Showcase Section (Reference Animation Recreation) */}
-      <PortfolioShowcaseSection isReducedMotion={isReducedMotion} />
-
-      {/* 4. About Me Section */}
+      {/* 2. About Me & Academic Education Section */}
       <AboutSection />
 
-      {/* 5. Technical Skills & Learning Areas */}
-      <SkillsSection />
+      {/* 3. Skills Section with Animated Progress Lines, Traveling Glowing Highlight, and Hand-Drawn Journey */}
+      <SkillsSection isReducedMotion={isReducedMotion} />
 
-      {/* 6. Featured Real-Time Projects (IDEAS THAT BECOME REAL PROJECTS) */}
+      {/* 4. Projects Showcase with Custom Project Visuals, Categories, and Architecture Modal */}
       <ProjectsSection />
 
-      {/* 7. Personal Learning Journey & Official Certifications */}
-      <LearningJourneySection />
+      {/* 5. Verified Certifications, Hackathons Under Pressure, and Achievements */}
+      <CertificatesSection />
 
-      {/* 8. Official Resume Preview & Download */}
-      <ResumeSection />
-
-      {/* 9. Hire Me & Contact Section */}
+      {/* 6. Hire Me & Contact Section */}
       <ContactSection />
 
-      {/* 10. Footer with Scroll-to-Top Indicator */}
+      {/* 7. Footer with Back-to-Top Indicator */}
       <Footer />
     </div>
   );

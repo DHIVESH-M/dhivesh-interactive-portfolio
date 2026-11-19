@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { playHoverSound } from '../utils/audio';
-import { Sparkles, Compass, Terminal } from 'lucide-react';
+import { Sparkles, Terminal } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -149,31 +149,17 @@ export default function HandDrawnSkillFlow() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-6xl mx-auto py-16 px-4">
-      {/* Journey Header Transition: About -> Skills */}
-      <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-xs font-mono text-cyan-300 backdrop-blur-md">
-          <Compass className="w-3.5 h-3.5 text-cyan-400" />
-          <span>ABOUT &rarr; MY SKILLS &amp; LEARNING AREAS</span>
-        </div>
-        <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-          THE HAND-DRAWN <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400">SKILL JOURNEY</span>
-        </h3>
-        <p className="text-xs sm:text-sm text-slate-400 font-mono leading-relaxed">
-          Follow the organic flowing path through my core programming roots, machine learning systems, creative 3D design, and active learning frontiers.
-        </p>
-
-        {/* Legend */}
-        <div className="flex items-center justify-center gap-6 pt-2 text-xs font-mono">
-          <span className="flex items-center gap-1.5 text-cyan-300">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
-            Project Applied
-          </span>
-          <span className="flex items-center gap-1.5 text-amber-300">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-            Active Learning
-          </span>
-        </div>
+    <div ref={containerRef} className="relative w-full max-w-6xl mx-auto py-8 px-4">
+      {/* Legend & Navigation Guide */}
+      <div className="flex flex-wrap items-center justify-center gap-6 pb-12 text-xs font-mono">
+        <span className="flex items-center gap-2 text-cyan-300">
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+          <span>Project Applied (Core Expertise)</span>
+        </span>
+        <span className="flex items-center gap-2 text-amber-300">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+          <span>Active Learning Frontier</span>
+        </span>
       </div>
 
       {/* Relative Timeline Track with Hand-Drawn SVG Spine */}

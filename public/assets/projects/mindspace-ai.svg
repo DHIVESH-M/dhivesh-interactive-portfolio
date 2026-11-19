@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="msBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#070a1a" />
+      <stop offset="60%" stopColor="#100b29" />
+      <stop offset="100%" stopColor="#1b0e35" />
+    </linearGradient>
+    <linearGradient id="msGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#9b6bff" />
+      <stop offset="50%" stopColor="#ff6bd6" />
+      <stop offset="100%" stopColor="#5be6ff" />
+    </linearGradient>
+    <filter id="msGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#msBg)" rx="18" />
+
+  <!-- Top Title Pill -->
+  <rect x="40" y="35" width="720" height="48" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" />
+  <circle cx="65" cy="59" r="6" fill="#9b6bff" />
+  <circle cx="85" cy="59" r="6" fill="#ff6bd6" />
+  <circle cx="105" cy="59" r="6" fill="#5be6ff" />
+  <text x="135" y="64" fill="#f4f5fb" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="600">MINDSPACE AI // COGNITIVE AGENT &amp; PATTERN TRACKER</text>
+  <rect x="590" y="45" width="150" height="28" rx="14" fill="rgba(155,107,255,0.2)" stroke="#9b6bff" />
+  <text x="610" y="63" fill="#ff6bd6" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">● AGENT ACTIVE</text>
+
+  <!-- Left: Neural Synapse Core and Brain Waveform -->
+  <g transform="translate(180, 260)">
+    <circle cx="0" cy="0" r="110" fill="none" stroke="rgba(155,107,255,0.2)" stroke-width="1.5" stroke-dasharray="4 6" />
+    <circle cx="0" cy="0" r="85" fill="none" stroke="rgba(255,107,214,0.3)" stroke-width="2" />
+    <circle cx="0" cy="0" r="60" fill="url(#msGrad)" filter="url(#msGlow)" opacity="0.85" />
+    
+    <!-- Pulse Rings -->
+    <circle cx="0" cy="0" r="30" fill="#080b1a" />
+    <circle cx="0" cy="0" r="12" fill="#5be6ff" filter="url(#msGlow)" />
+
+    <!-- Satellite Synapse Nodes -->
+    <circle cx="-90" cy="-60" r="10" fill="#9b6bff" />
+    <line x1="-90" y1="-60" x2="-35" y2="-20" stroke="#9b6bff" stroke-width="2" stroke-opacity="0.6" />
+
+    <circle cx="95" cy="-50" r="10" fill="#ff6bd6" />
+    <line x1="95" y1="-50" x2="35" y2="-20" stroke="#ff6bd6" stroke-width="2" stroke-opacity="0.6" />
+
+    <circle cx="85" cy="70" r="10" fill="#5be6ff" />
+    <line x1="85" y1="70" x2="35" y2="25" stroke="#5be6ff" stroke-width="2" stroke-opacity="0.6" />
+
+    <circle cx="-85" cy="70" r="10" fill="#9b6bff" />
+    <line x1="-85" y1="70" x2="-35" y2="25" stroke="#9b6bff" stroke-width="2" stroke-opacity="0.6" />
+  </g>
+
+  <!-- Right: Cognitive Insights Dashboard -->
+  <rect x="360" y="110" width="400" height="325" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" />
+  <text x="390" y="145" fill="#f4f5fb" font-family="'Poppins', sans-serif" font-size="15" font-weight="700">Real-Time Affective Telemetry</text>
+
+  <!-- Waveform Visualizer -->
+  <path d="M 390 220 Q 420 170 450 220 T 510 220 T 570 160 T 630 260 T 690 190 T 730 220" fill="none" stroke="url(#msGrad)" stroke-width="3" filter="url(#msGlow)" />
+  <line x1="390" y1="220" x2="730" y2="220" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2 4" />
+
+  <!-- Metric Badges -->
+  <g transform="translate(390, 260)">
+    <rect x="0" y="0" width="160" height="60" rx="10" fill="rgba(255,255,255,0.04)" />
+    <text x="15" y="24" fill="#7d84a6" font-family="'JetBrains Mono', monospace" font-size="10">COGNITIVE LOAD</text>
+    <text x="15" y="48" fill="#5be6ff" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800">LOW (28%)</text>
+  </g>
+
+  <g transform="translate(570, 260)">
+    <rect x="0" y="0" width="160" height="60" rx="10" fill="rgba(255,255,255,0.04)" />
+    <text x="15" y="24" fill="#7d84a6" font-family="'JetBrains Mono', monospace" font-size="10">BURNOUT RISK</text>
+    <text x="15" y="48" fill="#4ade80" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800">MINIMAL</text>
+  </g>
+
+  <rect x="390" y="340" width="340" height="65" rx="10" fill="rgba(155,107,255,0.12)" stroke="rgba(155,107,255,0.3)" />
+  <text x="410" y="365" fill="#f4f5fb" font-family="'Poppins', sans-serif" font-size="11" font-weight="600">Adaptive Assistant Intervention:</text>
+  <text x="410" y="388" fill="#b7bcd6" font-family="'Poppins', sans-serif" font-size="11">"Deep focus session completed. Suggested 5-minute restorative rest."</text>
+</svg>

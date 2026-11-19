@@ -20,6 +20,7 @@ export default function HeroVideoSection() {
   const videoRef = useRef(null);
   const videoWrapperRef = useRef(null);
   const reticleRef = useRef(null);
+  const hasShatteredRef = useRef(false);
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -166,28 +167,29 @@ export default function HeroVideoSection() {
     const st = ScrollTrigger.create({
       trigger: triggerEl,
       start: 'top top',
-      end: '+=250%',
+      end: '+=400%',
       pin: true,
-      scrub: 0.5,
+      scrub: 1.1,
       anticipatePin: 1,
       onUpdate: (self) => {
         const p = self.progress;
         setScrollProgress(p);
 
         // If not manually playing, sync video frames with scroll
-        if (video && video.duration && !video.paused) {
-          // user is playing video manually
-        } else if (video && video.duration) {
+        if (video && video.duration) {
+          if (!video.paused) video.pause();
           const t = p * video.duration;
           targetTimeRef.current = t;
           safeSeek(t);
         }
 
-        // Sound & Shatter Trigger
-        if (p >= 0.40 && !hasShattered) {
+        // Keep this ScrollTrigger alive while React updates the shatter overlay.
+        if (p >= 0.40 && !hasShatteredRef.current) {
+          hasShatteredRef.current = true;
           setHasShattered(true);
           playShatterSound();
-        } else if (p < 0.35 && hasShattered) {
+        } else if (p < 0.35 && hasShatteredRef.current) {
+          hasShatteredRef.current = false;
           setHasShattered(false);
         }
       }
@@ -196,7 +198,7 @@ export default function HeroVideoSection() {
     return () => {
       st.kill();
     };
-  }, [hasShattered]);
+  }, []);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -227,17 +229,22 @@ export default function HeroVideoSection() {
     setHasShattered(false);
   };
 
-  const scrollToNext = () => {
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollToShatter = () => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const start = trigger.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: start + window.innerHeight * 4 * 0.58, behavior: 'smooth' });
+  };
+
+  const scrollToAbout = () => {
+    const about = document.getElementById('about');
+    if (about) about.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const shatterOpacity = Math.min(1, Math.max(0, (scrollProgress - 0.38) * 3.5));
 
   return (
-    <div ref={triggerRef} className="relative w-full h-screen bg-[#07080b] overflow-hidden select-none">
+    <div ref={triggerRef} id="home" className="relative w-full h-screen bg-[#07080b] overflow-hidden select-none">
       {/* 1. BACKGROUND VIDEO LAYER WITH 3D FACE & HEAD TRACKING */}
       <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
         <div
@@ -328,7 +335,7 @@ export default function HeroVideoSection() {
 
         {/* Scroll Instruction */}
         <button
-          onClick={scrollToNext}
+          onClick={scrollToShatter}
           className="pointer-events-auto flex flex-col items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors group cursor-pointer"
         >
           <span className="text-xs font-mono uppercase tracking-widest group-hover:text-cyan-300">
@@ -403,7 +410,7 @@ export default function HeroVideoSection() {
         {/* Bottom Transition Pill */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-auto">
           <button
-            onClick={scrollToNext}
+            onClick={scrollToAbout}
             className="px-6 py-2.5 rounded-full bg-slate-900/90 border border-cyan-500/50 hover:border-cyan-400 text-xs font-mono text-cyan-300 hover:text-white backdrop-blur-md shadow-xl shadow-cyan-500/25 flex items-center gap-2 group transition-all"
           >
             <span>Explore Full Technical Portfolio</span>

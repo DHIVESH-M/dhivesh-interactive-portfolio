@@ -1,175 +1,140 @@
 import React from 'react';
-import { personalInfo } from '../data/portfolioData';
+import { educationInfo } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
-import About3DCore from './3d/About3DCore';
-import { 
-  GraduationCap, 
-  MapPin, 
-  Cpu, 
-  Code2, 
-  BrainCircuit, 
-  Boxes 
-} from 'lucide-react';
 
 export default function AboutSection() {
   return (
-    <section id="about" className="relative py-28 px-6 bg-[#07080b] overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 -left-48 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
+    <section id="about" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#080b1a]">
+      {/* Background Lighting */}
+      <div className="absolute top-1/2 left-0 w-80 h-80 bg-[#5b8cff]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="w-[92%] max-w-[1180px] mx-auto relative z-10">
         {/* Section Header */}
-        <div className="mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-300">
-            <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-            <span>01 &bull; IDENTITY &amp; PHILOSOPHY</span>
+        <div className="max-w-2xl mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-[#9b6bff] uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#9b6bff] shadow-[0_0_8px_#9b6bff]" />
+            <span>About Me</span>
           </div>
+
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            ABOUT <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">DHIVESH M</span>
+            Turning curiosity into <span className="grad-text">working code</span>
           </h2>
-          <p className="text-slate-400 font-mono text-sm max-w-xl">
-            Undergraduate builder at the intersection of Artificial Intelligence, embedded systems, and creative 3D technology.
+
+          <p className="text-sm sm:text-base text-[#b7bcd6] leading-relaxed font-light">
+            An engineering perspective centered on neural models, hardware microcontrollers, and real-time interactive systems.
           </p>
         </div>
 
-        {/* Main Grid: Portrait Card + Narrative */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Portrait Card with Cybernetic Frame & Three.js 3D Core */}
-          <div className="lg:col-span-5 flex flex-col items-center gap-6">
-            <div className="relative w-full max-w-sm group">
-              {/* Outer Glowing Border */}
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 opacity-60 blur-lg group-hover:opacity-100 group-hover:blur-xl transition-all duration-500" />
+        {/* Main Grid: Story + Timeline */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">
+          {/* Left Column: Narrative Card & Counters */}
+          <div className="lg:col-span-5 p-8 rounded-3xl glass-panel border border-white/10 space-y-5">
+            <p className="text-sm text-[#b7bcd6] leading-relaxed font-light">
+              I'm a second-year <strong className="text-white font-semibold">B.Sc. Artificial Intelligence and Machine Learning</strong> student, passionate about AI model development, software engineering, IoT, and emerging creative technologies.
+            </p>
 
-              {/* Main Portrait Container */}
-              <div className="relative rounded-3xl bg-[#0d111a] border border-cyan-500/30 p-4 overflow-hidden backdrop-blur-xl">
-                {/* Tech Grid Pattern Header */}
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 text-[11px] font-mono text-slate-400">
-                  <span className="flex items-center gap-1.5 text-cyan-300">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    ID: DHIVESH-M-AIML
-                  </span>
-                  <span>STATUS: ACTIVE BUILDER</span>
-                </div>
+            <p className="text-sm text-[#b7bcd6] leading-relaxed font-light">
+              I enjoy building real-world projects, competing in innovation hackathons, mastering low-level algorithms, and engineering practical solutions that solve genuine community problems.
+            </p>
 
-                {/* Dhivesh's Real Portrait Photo */}
-                <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-900 border border-white/10">
-                  <img
-                    src="/images/profile.png"
-                    alt="Dhivesh M"
-                    className="w-full h-full object-cover object-top filter grayscale-[15%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  />
-                  {/* Subtle Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-transparent to-transparent opacity-80" />
-                  
-                  {/* Electric corner markers */}
-                  <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-cyan-400" />
-                  <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-cyan-400" />
-                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-cyan-400" />
-                  <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-cyan-400" />
-                </div>
+            <p className="text-sm text-[#b7bcd6] leading-relaxed font-light">
+              My goal is to become an <strong className="text-white font-semibold">AI Engineer</strong> who builds impactful technology — one system, one hackathon, one line of code at a time.
+            </p>
 
-                {/* Quick Info Bar below image */}
-                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Pollachi, Tamil Nadu</span>
-                  </div>
-                  <div className="text-cyan-400 font-semibold">
-                    AIML '28
-                  </div>
-                </div>
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/10 text-center">
+              <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
+                <span className="block text-2xl font-black grad-text font-mono">06+</span>
+                <span className="text-[10px] font-mono text-[#7d84a6] uppercase tracking-wider">Projects</span>
               </div>
-            </div>
 
-            {/* Three.js 3D Cybernetic Holographic Core Card */}
-            <div className="w-full max-w-sm p-4 rounded-3xl glass-panel border border-cyan-500/25 relative group overflow-hidden">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-[10px] font-mono text-cyan-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                  THREE.JS &bull; 3D CYBERNETIC CORE
-                </span>
-                <span className="text-slate-500">INTERACTIVE ORBIT</span>
+              <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
+                <span className="block text-2xl font-black grad-text font-mono">06</span>
+                <span className="text-[10px] font-mono text-[#7d84a6] uppercase tracking-wider">Certs</span>
               </div>
-              <div className="w-full h-48">
-                <About3DCore />
-              </div>
-              <div className="text-[10px] font-mono text-center text-slate-400 pt-2 border-t border-white/5">
-                Hover &amp; move cursor to dynamically rotate 3D geometry
+
+              <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
+                <span className="block text-2xl font-black grad-text font-mono">2028</span>
+                <span className="text-[10px] font-mono text-[#7d84a6] uppercase tracking-wider">Grad Year</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Bio Narrative & Pillars */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="space-y-4 text-slate-300 leading-relaxed text-base sm:text-lg font-light">
-              {personalInfo.bio.map((paragraph, idx) => (
-                <p key={idx} className="tracking-wide">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            {/* Core Focus Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-              <div 
-                onMouseEnter={playHoverSound}
-                className="p-4 rounded-2xl glass-panel border border-white/10 hover:border-cyan-500/40 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-3 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-transform">
-                  <BrainCircuit className="w-5 h-5" />
+          {/* Right Column: Experience Timeline */}
+          <div className="lg:col-span-7 relative pl-8 border-l-2 border-[#9b6bff]/30 space-y-8">
+            {[
+              {
+                title: "AI & ML Foundations",
+                meta: "2024 — Present",
+                desc: "Building deep core strengths in Python, Java, C, and machine learning fundamentals alongside mathematical optimization.",
+                icon: "fa-brain"
+              },
+              {
+                title: "Hackathons & Rapid Prototyping",
+                meta: "Ongoing",
+                desc: "Competing in the Smart India Hackathon and campus innovation sprints — rapid engineering under national time constraints.",
+                icon: "fa-trophy"
+              },
+              {
+                title: "Real-World Hardware & Platforms",
+                meta: "Active Engineering",
+                desc: "Shipping deployed systems spanning IoT microplastic filtration hardware, agricultural marketplaces, and crash safety beacons.",
+                icon: "fa-microchip"
+              },
+              {
+                title: "Future: Autonomous AI Engineer",
+                meta: "Career Horizon — 2028",
+                desc: "Graduating from Rathinam Global University and stepping into an AI engineering role creating technology with measurable global impact.",
+                icon: "fa-rocket"
+              }
+            ].map((step, idx) => (
+              <div key={idx} onMouseEnter={playHoverSound} className="relative group">
+                {/* Timeline Dot */}
+                <div className="absolute -left-[41px] top-1.5 w-5 h-5 rounded-full bg-[#080b1a] border-2 border-[#9b6bff] flex items-center justify-center group-hover:scale-125 group-hover:border-[#5be6ff] transition-all">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#5b8cff]" />
                 </div>
-                <h4 className="text-white font-bold text-sm mb-1">Practical AI / ML</h4>
-                <p className="text-xs text-slate-400 leading-normal">
-                  Focused on applicable intelligence: models, real-time inference, and algorithmic solutions.
-                </p>
-              </div>
 
-              <div 
-                onMouseEnter={playHoverSound}
-                className="p-4 rounded-2xl glass-panel border border-white/10 hover:border-cyan-500/40 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-3 group-hover:scale-110 group-hover:bg-blue-500/20 transition-transform">
-                  <Boxes className="w-5 h-5" />
-                </div>
-                <h4 className="text-white font-bold text-sm mb-1">3D &amp; Creative Tech</h4>
-                <p className="text-xs text-slate-400 leading-normal">
-                  Crafting 3D assets in Blender and exploring real-time environments in Unity.
-                </p>
-              </div>
-
-              <div 
-                onMouseEnter={playHoverSound}
-                className="p-4 rounded-2xl glass-panel border border-white/10 hover:border-cyan-500/40 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-transform">
-                  <Code2 className="w-5 h-5" />
-                </div>
-                <h4 className="text-white font-bold text-sm mb-1">Real-Time Prototypes</h4>
-                <p className="text-xs text-slate-400 leading-normal">
-                  Bridging software logic with sensors and microcontrollers for immediate physical impact.
-                </p>
-              </div>
-            </div>
-
-            {/* Education Highlight Card */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900/90 to-[#0e1422] border border-cyan-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-400">
-                  <GraduationCap className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-white">
-                    {personalInfo.education.degree}
+                <div className="p-6 rounded-2xl glass-panel border border-white/10 group-hover:border-[#9b6bff]/50 transition-all">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="text-base font-bold text-white group-hover:text-[#5be6ff] transition-colors">
+                      {step.title}
+                    </h4>
+                    <span className="text-xs font-mono text-[#5b8cff]">
+                      {step.meta}
+                    </span>
                   </div>
-                  <div className="text-xs text-slate-400">
-                    {personalInfo.education.institution}
-                  </div>
+                  <p className="text-xs text-[#b7bcd6] leading-relaxed font-light">
+                    {step.desc}
+                  </p>
                 </div>
               </div>
-              <div className="px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-[11px] font-mono text-cyan-300 whitespace-nowrap">
-                {personalInfo.education.year}
-              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Academic Degree Highlight Card */}
+        <div className="p-8 rounded-3xl glass-panel border border-white/15 max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl shrink-0 shadow-lg"
+            style={{
+              background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+            }}
+          >
+            <i className="fa-solid fa-graduation-cap" />
+          </div>
+
+          <div className="flex-1 space-y-1">
+            <span className="text-[10px] font-mono text-[#9b6bff] uppercase tracking-wider font-bold">
+              Formal Degree Programme
+            </span>
+            <h3 className="text-xl font-bold text-white">
+              {educationInfo.degree}
+            </h3>
+            <div className="text-sm font-semibold text-[#5be6ff]">
+              {educationInfo.institution}
+            </div>
+            <div className="text-xs font-mono text-[#7d84a6]">
+              {educationInfo.year} &bull; {educationInfo.location}
             </div>
           </div>
         </div>

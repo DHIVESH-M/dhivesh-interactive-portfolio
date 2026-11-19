@@ -1,71 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  personalInfo, 
-  featuredProjects
-} from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
-import { LinkedinIcon } from './SocialIcons';
+import { GithubIcon } from './SocialIcons';
 import { 
   ChevronLeft, 
   ChevronRight, 
-  Play, 
-  Pause, 
-  Sparkles, 
-  ArrowUpRight,
-  Shield,
-  Terminal
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PREVIEW_SECTIONS = [
-  { id: 'home', label: '01 // HOME', title: 'Introduction & Identity' },
-  { id: 'about', label: '02 // ABOUT', title: 'Background & Philosophy' },
-  { id: 'skills', label: '03 // SKILLS', title: 'Core Technical Arsenal' },
-  { id: 'projects', label: '04 // PROJECTS', title: 'Real Practical Systems' },
-  { id: 'contact', label: '05 // CONTACT', title: 'Get In Touch' },
+// 3 Curated Signature Architecture Spotlights from Dhivesh's real work
+const SPOTLIGHT_SYSTEMS = [
+  {
+    index: '01',
+    category: 'AI & Multi-Agent Intelligence',
+    title: 'SkillPath AI',
+    tagline: 'Adaptive Career Gap Intelligence & Learning Roadmap Engine',
+    description: 'An intelligent multi-agent platform analyzing user skill proficiency matrices, mapping labor-market career gaps, and generating individualized dynamic roadmaps with continuous evaluation loops.',
+    technologies: ['Python', 'Custom Neural Models', 'Vector Pipelines', 'Algorithm Design'],
+    metrics: [
+      { label: 'Agent Coordination', val: 'Multi-Agent' },
+      { label: 'Evaluation Speed', val: '< 180ms' },
+      { label: 'Roadmap Accuracy', val: 'Adaptive' }
+    ],
+    github: 'https://github.com/DHIVESH-M',
+    type: 'ai-agents'
+  },
+  {
+    index: '02',
+    category: 'Hardware IoT & Real-Time Telemetry',
+    title: 'AquaShield',
+    tagline: 'Edge IoT Hydro-Sensing & Groundwater Telemetry Platform',
+    description: 'An end-to-end environmental sensing network capturing pH, turbidity, TDS, and water table levels via microcontroller edge nodes, broadcasting live telemetry alerts to prevent regional contamination.',
+    technologies: ['C / Embedded Firmware', 'IoT Sensor Nodes', 'Telemetry Pipelines', 'Real-time Alerts'],
+    metrics: [
+      { label: 'Sensor Sampling', val: '10 Hz' },
+      { label: 'Edge Protocol', val: 'MQTT / HTTP' },
+      { label: 'Telemetry Uptime', val: 'Real-time' }
+    ],
+    github: 'https://github.com/DHIVESH-M',
+    type: 'iot-telemetry'
+  },
+  {
+    index: '03',
+    category: 'Intelligent Cognitive Assistant',
+    title: 'Mindspace AI',
+    tagline: 'Adaptive Neural Wellness & Behavioral Pattern Assistant',
+    description: 'A responsive cognitive support system employing natural language processing to track mood fluctuations, analyze emotional burnout markers, and provide context-aware guided interventions.',
+    technologies: ['Python', 'NLP Embeddings', 'Pattern Classification', 'Secure Storage'],
+    metrics: [
+      { label: 'Sentiment Precision', val: 'High' },
+      { label: 'Inference Mode', val: 'Client Edge' },
+      { label: 'Privacy Guard', val: 'Zero Leakage' }
+    ],
+    github: 'https://github.com/DHIVESH-M',
+    type: 'neural-health'
+  }
 ];
 
 export default function PortfolioShowcaseSection({ isReducedMotion = false }) {
-  const [activeTab, setActiveTab] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
   const [tiltStyle, setTiltStyle] = useState('');
   const [glarePos, setGlarePos] = useState({ x: 50, y: 50, opacity: 0 });
 
   const sectionRef = useRef(null);
-  const mockupRef = useRef(null);
+  const stageRef = useRef(null);
   const ribbonRef = useRef(null);
   const headlineRef = useRef(null);
-  const butterflyRef = useRef(null);
-  const hashtagTopRef = useRef(null);
-  const hashtagBottomRef = useRef(null);
-  const catRef = useRef(null);
+  const currentSystem = SPOTLIGHT_SYSTEMS[activeIdx];
 
-  // Auto-cycle through preview sections every 4.5 seconds
-  useEffect(() => {
-    if (!isAutoPlaying || isReducedMotion) return;
-
-    const intervalTime = 4500;
-    const stepTime = 50;
-    const totalSteps = intervalTime / stepTime;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveTab((cur) => (cur + 1) % PREVIEW_SECTIONS.length);
-          return 0;
-        }
-        return prev + (100 / totalSteps);
-      });
-    }, stepTime);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, isReducedMotion, activeTab]);
-
-  // Entrance animations via GSAP ScrollTrigger
+  // GSAP Entrance Animations
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || isReducedMotion) return;
@@ -75,116 +82,56 @@ export default function PortfolioShowcaseSection({ isReducedMotion = false }) {
       if (headlineRef.current) {
         gsap.fromTo(
           headlineRef.current.children,
-          { opacity: 0, y: 35, scale: 0.95 },
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.12,
+            duration: 0.9,
+            stagger: 0.1,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: section,
               start: 'top 75%',
-              toggleActions: 'play none none reverse',
+              toggleActions: 'play none none reverse'
             }
           }
         );
       }
 
-      // 2. Central Mockup scale & entrance
-      if (mockupRef.current) {
+      // 2. Stage reveal
+      if (stageRef.current) {
         gsap.fromTo(
-          mockupRef.current,
-          { opacity: 0, scale: 0.88, y: 60 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 1.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 70%',
-              toggleActions: 'play none none reverse',
-            }
-          }
-        );
-      }
-
-      // 3. Ribbon parallax
-      if (ribbonRef.current) {
-        gsap.fromTo(
-          ribbonRef.current,
-          { strokeDashoffset: 1200, opacity: 0 },
-          {
-            strokeDashoffset: 0,
-            opacity: 1,
-            duration: 1.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            }
-          }
-        );
-      }
-
-      // 4. Hashtags float entrance
-      if (hashtagTopRef.current) {
-        gsap.fromTo(
-          hashtagTopRef.current,
-          { opacity: 0, scale: 0.7, rotation: -30 },
-          {
-            opacity: 0.95,
-            scale: 1,
-            rotation: -14,
-            duration: 1.2,
-            ease: 'back.out(1.4)',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse',
-            }
-          }
-        );
-      }
-
-      if (hashtagBottomRef.current) {
-        gsap.fromTo(
-          hashtagBottomRef.current,
-          { opacity: 0, scale: 0.6, rotation: 10 },
-          {
-            opacity: 0.85,
-            scale: 1,
-            rotation: -8,
-            duration: 1.4,
-            ease: 'back.out(1.2)',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 65%',
-              toggleActions: 'play none none reverse',
-            }
-          }
-        );
-      }
-
-      // 5. Butterfly entrance
-      if (butterflyRef.current) {
-        gsap.fromTo(
-          butterflyRef.current,
-          { opacity: 0, y: -40, scale: 0.6 },
+          stageRef.current,
+          { opacity: 0, y: 50, scale: 0.96 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
             duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 70%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      }
+
+      // 3. Ribbon stroke reveal
+      if (ribbonRef.current) {
+        gsap.fromTo(
+          ribbonRef.current,
+          { strokeDashoffset: 1400, opacity: 0 },
+          {
+            strokeDashoffset: 0,
+            opacity: 1,
+            duration: 1.8,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: section,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
             }
           }
         );
@@ -194,26 +141,26 @@ export default function PortfolioShowcaseSection({ isReducedMotion = false }) {
     return () => ctx.revert();
   }, [isReducedMotion]);
 
-  // 3D Perspective Tilt on Desktop Mouse Move
+  // Subtle 3D Perspective Tilt on Desktop Mouse Move
   const handleMouseMove = (e) => {
     if (isReducedMotion || window.innerWidth < 768) return;
-    const mockup = mockupRef.current;
-    if (!mockup) return;
+    const stage = stageRef.current;
+    if (!stage) return;
 
-    const rect = mockup.getBoundingClientRect();
+    const rect = stage.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const midX = rect.width / 2;
     const midY = rect.height / 2;
 
-    const rotX = ((y - midY) / midY) * -7;
-    const rotY = ((x - midX) / midX) * 7;
+    const rotX = ((y - midY) / midY) * -5;
+    const rotY = ((x - midX) / midX) * 5;
 
-    setTiltStyle(`perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`);
+    setTiltStyle(`perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.005, 1.005, 1.005)`);
     setGlarePos({
       x: (x / rect.width) * 100,
       y: (y / rect.height) * 100,
-      opacity: 0.25
+      opacity: 0.2
     });
   };
 
@@ -222,25 +169,22 @@ export default function PortfolioShowcaseSection({ isReducedMotion = false }) {
     setGlarePos((prev) => ({ ...prev, opacity: 0 }));
   };
 
-  const selectTab = (idx) => {
-    setActiveTab(idx);
-    setProgress(0);
+  const handleNext = () => {
+    setActiveIdx((prev) => (prev + 1) % SPOTLIGHT_SYSTEMS.length);
     playHoverSound();
   };
 
-  const nextTab = () => {
-    setActiveTab((cur) => (cur + 1) % PREVIEW_SECTIONS.length);
-    setProgress(0);
+  const handlePrev = () => {
+    setActiveIdx((prev) => (prev - 1 + SPOTLIGHT_SYSTEMS.length) % SPOTLIGHT_SYSTEMS.length);
     playHoverSound();
   };
 
-  const prevTab = () => {
-    setActiveTab((cur) => (cur - 1 + PREVIEW_SECTIONS.length) % PREVIEW_SECTIONS.length);
-    setProgress(0);
+  const handleSelect = (idx) => {
+    setActiveIdx(idx);
     playHoverSound();
   };
 
-  const scrollToFullSection = (targetId) => {
+  const scrollToSection = (targetId) => {
     playHoverSound();
     const elem = document.getElementById(targetId);
     if (elem) {
@@ -249,621 +193,379 @@ export default function PortfolioShowcaseSection({ isReducedMotion = false }) {
   };
 
   return (
-    <section 
-      id="showcase" 
-      ref={sectionRef} 
-      className="relative min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden select-none"
+    <section
+      id="showcase"
+      ref={sectionRef}
+      className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden select-none bg-[#07080b]"
       style={{
-        background: 'linear-gradient(180deg, #100e38 0%, #1e186b 20%, #342bb0 45%, #6366f1 70%, #a5b4fc 88%, #e2e8f0 100%)'
+        backgroundImage: `
+          radial-gradient(circle at 50% 30%, rgba(35, 30, 95, 0.4) 0%, rgba(12, 14, 25, 0.8) 55%, #07080b 95%),
+          linear-gradient(180deg, rgba(7, 8, 11, 0.9) 0%, rgba(17, 19, 36, 0.4) 30%, rgba(17, 19, 36, 0.4) 70%, #07080b 100%)
+        `
       }}
     >
-      {/* CRT Scanline Overlay Texture */}
-      <div 
-        className="absolute inset-0 pointer-events-none z-10 opacity-30 mix-blend-overlay"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 0.25) 1px, transparent 1px, transparent 3px)',
-          backgroundSize: '100% 3px'
-        }}
-      />
-
-      {/* Atmospheric Shifting Radial Light Blobs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[750px] bg-indigo-500/20 rounded-full blur-[140px] pointer-events-none animate-pulse" />
-      <div className="absolute top-10 right-10 w-[450px] h-[450px] bg-blue-400/25 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-20 left-10 w-[550px] h-[550px] bg-purple-400/20 rounded-full blur-[130px] pointer-events-none" />
-
-      {/* Large Smooth Curved Grey/Silver Ribbon (Reference Video Match) */}
+      {/* Background Connecting Curved Silver Ribbon */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
-        viewBox="0 0 1200 1200"
+        viewBox="0 0 1400 1000"
         fill="none"
         preserveAspectRatio="none"
       >
         <defs>
-          <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#d1d5db" stopOpacity="0.85" />
-            <stop offset="35%" stopColor="#9ca3af" stopOpacity="0.75" />
-            <stop offset="70%" stopColor="#6b7280" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#4b5563" stopOpacity="0.9" />
+          <linearGradient id="cinematicRibbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.4" />
+            <stop offset="35%" stopColor="#cbd5e1" stopOpacity="0.65" />
+            <stop offset="70%" stopColor="#64748b" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#334155" stopOpacity="0.3" />
           </linearGradient>
 
-          <filter id="ribbonShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="18" stdDeviation="24" floodColor="#090726" floodOpacity="0.6" />
+          <filter id="ribbonGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="16" stdDeviation="30" floodColor="#1e1b4b" floodOpacity="0.5" />
           </filter>
         </defs>
 
-        {/* 3D Ribbon Drop Shadow Path */}
+        {/* Ambient shadow path */}
         <path
-          d="M 1050 -50 C 950 180, 820 260, 680 400 C 500 580, 320 720, 480 920 C 580 1040, 750 1120, 820 1250"
-          stroke="#0b082e"
+          d="M 1250 -60 C 1100 160, 960 240, 720 400 C 420 600, 260 760, 380 960 C 440 1060, 560 1120, 680 1200"
+          stroke="#050710"
           strokeWidth="110"
           strokeLinecap="round"
-          strokeOpacity="0.4"
-          filter="blur(16px)"
+          strokeOpacity="0.6"
+          filter="blur(20px)"
           fill="none"
         />
 
-        {/* Main Silver Curved Ribbon Band */}
+        {/* Main Ribbon Strand */}
         <path
           ref={ribbonRef}
-          d="M 1050 -50 C 950 180, 820 260, 680 400 C 500 580, 320 720, 480 920 C 580 1040, 750 1120, 820 1250"
-          stroke="url(#ribbonGrad)"
-          strokeWidth="90"
+          d="M 1250 -60 C 1100 160, 960 240, 720 400 C 420 600, 260 760, 380 960 C 440 1060, 560 1120, 680 1200"
+          stroke="url(#cinematicRibbonGrad)"
+          strokeWidth="75"
           strokeLinecap="round"
           strokeDasharray="1600"
           strokeDashoffset="0"
-          filter="url(#ribbonShadow)"
+          filter="url(#ribbonGlow)"
           fill="none"
         />
 
-        {/* Specular Edge Highlight on Ribbon */}
+        {/* Specular Edge Highlight */}
         <path
-          d="M 1050 -50 C 950 180, 820 260, 680 400 C 500 580, 320 720, 480 920 C 580 1040, 750 1120, 820 1250"
+          d="M 1250 -60 C 1100 160, 960 240, 720 400 C 420 600, 260 760, 380 960 C 440 1060, 560 1120, 680 1200"
           stroke="#ffffff"
-          strokeWidth="3.5"
+          strokeWidth="2.5"
           strokeLinecap="round"
-          strokeOpacity="0.45"
+          strokeOpacity="0.35"
           fill="none"
         />
       </svg>
 
-      {/* Large Decorative Black Hashtag (Upper Right Area) */}
-      <div 
-        ref={hashtagTopRef}
-        className="absolute top-8 right-4 sm:right-12 md:right-20 lg:right-28 pointer-events-none z-10 select-none"
+      {/* Subtle CRT Scanline Texture (Ultra-subtle, non-distracting) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10 opacity-15 mix-blend-overlay"
         style={{
-          transform: 'rotate(-14deg)',
-          animation: isReducedMotion ? 'none' : 'floatAndBob 7s ease-in-out infinite'
+          backgroundImage: 'repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 1px, transparent 1px, transparent 3px)',
+          backgroundSize: '100% 3px'
         }}
-      >
-        <span 
-          className="text-8xl sm:text-9xl md:text-[160px] lg:text-[210px] font-black text-black leading-none block tracking-tighter"
-          style={{
-            textShadow: '0 12px 35px rgba(0, 0, 0, 0.75), 0 0 10px rgba(0, 0, 0, 0.5)',
-            WebkitTextStroke: '2px rgba(20, 15, 60, 0.6)'
-          }}
-        >
-          #
-        </span>
-      </div>
+      />
 
-      {/* Floating 3D Geometric/Origami Butterfly (Near Top Along Ribbon) */}
-      <div 
-        ref={butterflyRef}
-        className="absolute top-20 right-[22%] sm:right-[26%] md:right-[30%] pointer-events-none z-20"
-        style={{
-          animation: isReducedMotion ? 'none' : 'butterflyHover 5s ease-in-out infinite'
-        }}
-      >
-        <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
-          {/* Butterfly Ambient Glow */}
-          <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-xl" />
+      {/* Ambient Lighting Accents */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
 
-          {/* 3D Origami Butterfly Wings */}
-          <svg 
-            viewBox="0 0 100 100" 
-            className="w-full h-full drop-shadow-[0_12px_24px_rgba(10,5,40,0.8)]"
-          >
-            {/* Left Wing Facets */}
-            <g className="origin-center" style={{ animation: isReducedMotion ? 'none' : 'wingFlapLeft 1.2s ease-in-out infinite alternate' }}>
-              <polygon points="50,45 15,20 28,52" fill="#0b0f24" stroke="#38bdf8" strokeWidth="0.8" />
-              <polygon points="50,45 28,52 20,78 45,62" fill="#1e1b4b" stroke="#60a5fa" strokeWidth="0.8" />
-              <polygon points="50,45 45,62 50,85" fill="#312e81" stroke="#818cf8" strokeWidth="0.8" />
-            </g>
-
-            {/* Right Wing Facets */}
-            <g className="origin-center" style={{ animation: isReducedMotion ? 'none' : 'wingFlapRight 1.2s ease-in-out infinite alternate' }}>
-              <polygon points="50,45 85,20 72,52" fill="#0b0f24" stroke="#38bdf8" strokeWidth="0.8" />
-              <polygon points="50,45 72,52 80,78 55,62" fill="#1e1b4b" stroke="#60a5fa" strokeWidth="0.8" />
-              <polygon points="50,45 55,62 50,85" fill="#312e81" stroke="#818cf8" strokeWidth="0.8" />
-            </g>
-
-            {/* Central Spine */}
-            <line x1="50" y1="35" x2="50" y2="88" stroke="#00f0ff" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="50" cy="35" r="3.5" fill="#00f0ff" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Decorative Faint Stencil Watermark (Reference Style: "CODE_WITH_ME23") */}
-      <div className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-15 select-none whitespace-nowrap">
-        <span className="text-4xl sm:text-6xl md:text-8xl font-black font-mono tracking-[0.25em] text-white">
-          DHIVESH_M // 2026
-        </span>
-      </div>
-
-      {/* Section Content Wrapper */}
+      {/* Main Container */}
       <div className="max-w-6xl mx-auto relative z-20 flex flex-col items-center">
-        {/* Animated Bold Headline */}
-        <div ref={headlineRef} className="text-center mb-8 sm:mb-12 space-y-2">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-mono font-bold text-white tracking-widest shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-            <span>INTERACTIVE PORTFOLIO ENGINE</span>
+        {/* Cinematic Headline & Subtitle */}
+        <div ref={headlineRef} className="text-center mb-10 sm:mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-xs font-mono text-cyan-300 backdrop-blur-md">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>THE LIVING SYSTEMS OF DHIVESH M</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white uppercase drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight uppercase leading-none">
             <span>YOU NEED </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-blue-200">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300">
               THIS PORTFOLIO
             </span>
           </h2>
 
-          <p className="text-xs sm:text-sm font-mono text-blue-100/90 max-w-xl mx-auto tracking-wide">
-            Live interactive preview of actual systems, machine learning architectures, and creative technologies.
+          <p className="text-xs sm:text-sm font-mono text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Direct interactive architectural spotlight: where artificial intelligence, real-time IoT telemetry, and practical software converge.
           </p>
+
+          {/* Interactive Mode Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
+            {SPOTLIGHT_SYSTEMS.map((sys, idx) => (
+              <button
+                key={sys.index}
+                onClick={() => handleSelect(idx)}
+                className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                  activeIdx === idx
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25 scale-105'
+                    : 'bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <span>{sys.index}</span>
+                <span>&bull;</span>
+                <span>{sys.title}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Central Framed Portfolio Browser / Display Mockup */}
+        {/* Primary Showcase Stage (Full-bleed 3D Perspective Card, No Fake Window) */}
         <div
-          ref={mockupRef}
+          ref={stageRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{
             transform: tiltStyle,
-            transition: 'transform 0.15s ease-out',
+            transition: 'transform 0.15s ease-out'
           }}
-          className="relative w-full max-w-4xl rounded-3xl bg-[#090d18]/95 border-2 border-white/30 shadow-[0_25px_70px_rgba(10,5,40,0.6)] overflow-hidden backdrop-blur-xl group will-change-transform"
+          className="relative w-full rounded-3xl bg-[#0b0e17]/95 border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] overflow-hidden backdrop-blur-xl group will-change-transform"
         >
           {/* Specular Glare Overlay */}
           <div
             className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 mix-blend-screen"
             style={{
-              background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.28) 0%, transparent 60%)`,
+              background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.2) 0%, transparent 55%)`,
               opacity: glarePos.opacity
             }}
           />
 
-          {/* Device Top Chrome Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 bg-[#060913] border-b border-white/15 text-xs font-mono">
-            {/* Traffic Lights */}
+          {/* Stage Top Header Bar */}
+          <div className="flex items-center justify-between px-6 py-4 bg-[#080a11] border-b border-white/10 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="text-cyan-300 font-bold tracking-wider">
+                SPOTLIGHT {currentSystem.index} // {currentSystem.category.toUpperCase()}
+              </span>
+            </div>
+
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-500/90 shadow-sm" />
-              <span className="w-3 h-3 rounded-full bg-amber-500/90 shadow-sm" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/90 shadow-sm" />
-              <span className="ml-3 text-[11px] text-slate-400 font-bold hidden sm:inline">
-                DHIVESH_OS v2.4
-              </span>
-            </div>
-
-            {/* URL Address Pill */}
-            <div className="flex-1 max-w-md mx-2 px-3.5 py-1 rounded-full bg-slate-900/90 border border-white/10 text-[11px] text-slate-300 flex items-center justify-center gap-2 truncate shadow-inner">
-              <Shield className="w-3 h-3 text-cyan-400 shrink-0" />
-              <span className="text-cyan-300 font-medium">https://</span>
-              <span className="text-white truncate">dhivesh.dev/portfolio/{PREVIEW_SECTIONS[activeTab].id}</span>
-            </div>
-
-            {/* Autoplay & Navigation Controls */}
-            <div className="flex items-center gap-1.5">
               <button
-                onClick={prevTab}
-                title="Previous Section"
-                className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                onClick={handlePrev}
+                title="Previous System"
+                className="p-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 hover:text-white hover:border-cyan-500/40 transition-colors cursor-pointer"
               >
-                <ChevronLeft className="w-3.5 h-3.5" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
-
               <button
-                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                title={isAutoPlaying ? "Pause Auto-Tour" : "Resume Auto-Tour"}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  isAutoPlaying 
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30' 
-                    : 'bg-slate-800/80 text-slate-400 hover:text-white'
-                }`}
+                onClick={handleNext}
+                title="Next System"
+                className="p-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 hover:text-white hover:border-cyan-500/40 transition-colors cursor-pointer"
               >
-                {isAutoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              </button>
-
-              <button
-                onClick={nextTab}
-                title="Next Section"
-                className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
-              >
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Preview Navigation Tabs & Timer Progress Bar */}
-          <div className="relative bg-[#0b101e] border-b border-white/10">
-            {/* Auto-cycle Progress Line */}
-            {isAutoPlaying && (
-              <div 
-                className="absolute top-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 transition-all duration-75"
-                style={{ width: `${progress}%` }}
-              />
-            )}
+          {/* Stage Core Content: Split Architecture Layout */}
+          <div className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Column: Interactive Schematic Vector Illustration */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              <div className="relative w-full h-64 sm:h-72 rounded-2xl bg-[#06080e] border border-white/10 p-4 flex items-center justify-center overflow-hidden group-hover:border-cyan-500/30 transition-colors">
+                {/* Background grid */}
+                <div 
+                  className="absolute inset-0 opacity-20 pointer-events-none"
+                  style={{
+                    backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                    backgroundSize: '24px 24px'
+                  }}
+                />
 
-            <div className="flex overflow-x-auto no-scrollbar px-3 py-2 gap-2">
-              {PREVIEW_SECTIONS.map((tab, idx) => {
-                const isActive = activeTab === idx;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => selectTab(idx)}
-                    className={`px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-md shadow-cyan-500/20'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+                {/* Vector Architecture Diagram */}
+                <SystemArchitectureVisual type={currentSystem.type} />
+
+                {/* System Badge */}
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-[#07080b]/90 border border-cyan-500/30 text-[10px] font-mono text-cyan-300 backdrop-blur-md">
+                  {currentSystem.category}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Dynamic Mockup Viewport Body */}
-          <div className="relative p-6 sm:p-8 min-h-[380px] sm:min-h-[440px] flex flex-col justify-between">
-            {/* VIEW 1: HOME PREVIEW */}
-            {activeTab === 0 && (
-              <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src="/images/profile.png"
-                      alt="Dhivesh M Portrait"
-                      className="w-16 h-16 rounded-2xl object-cover border-2 border-cyan-400 shadow-lg shadow-cyan-500/20"
-                    />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xl sm:text-2xl font-black text-white">
-                          {personalInfo.name}
-                        </h3>
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-[10px] font-mono text-emerald-300">
-                          Active Builder
-                        </span>
-                      </div>
-                      <p className="text-xs font-mono text-cyan-300">
-                        {personalInfo.role}
-                      </p>
-                      <p className="text-[11px] font-mono text-slate-400">
-                        {personalInfo.education.institution}
-                      </p>
+            {/* Right Column: Technical Architecture Details */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400">
+                  <span>ARCHITECTURE BREAKDOWN</span>
+                  <span>&bull;</span>
+                  <span className="text-emerald-400">STATUS: VERIFIED BUILD</span>
+                </div>
+
+                <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                  {currentSystem.title}
+                </h3>
+
+                <p className="text-sm font-mono text-cyan-300">
+                  {currentSystem.tagline}
+                </p>
+
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+                  {currentSystem.description}
+                </p>
+              </div>
+
+              {/* Real Performance / Engineering Metrics */}
+              <div className="grid grid-cols-3 gap-3">
+                {currentSystem.metrics.map((m, mIdx) => (
+                  <div key={mIdx} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-center">
+                    <div className="text-sm sm:text-base font-black text-cyan-400 font-mono">
+                      {m.val}
+                    </div>
+                    <div className="text-[10px] font-mono text-slate-400 mt-0.5 truncate">
+                      {m.label}
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => scrollToFullSection('hero')}
-                    className="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-mono font-bold text-xs flex items-center gap-1.5 hover:bg-cyan-400 transition-colors shadow-md shadow-cyan-500/20 cursor-pointer"
-                  >
-                    <span>Experience Full Hero</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400">
-                      Core Mission
-                    </span>
-                    <p className="text-sm font-semibold text-white leading-snug">
-                      "{personalInfo.tagline}"
-                    </p>
-                    <p className="text-xs text-slate-300 font-light leading-relaxed">
-                      Specializing in applied machine learning, neural reasoning models, hardware IoT integration, and creative 3D interfaces.
-                    </p>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                      Engineering Metrics
-                    </span>
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <div className="text-lg font-black text-cyan-400">06</div>
-                        <div className="text-[10px] font-mono text-slate-400">Systems</div>
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <div className="text-lg font-black text-blue-400">09</div>
-                        <div className="text-[10px] font-mono text-slate-400">Core Tech</div>
-                      </div>
-                      <div className="p-2 rounded-xl bg-black/40 border border-white/5">
-                        <div className="text-lg font-black text-emerald-400">100%</div>
-                        <div className="text-[10px] font-mono text-slate-400">Hands-on</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
-            )}
 
-            {/* VIEW 2: ABOUT PREVIEW */}
-            {activeTab === 1 && (
-              <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">
-                      About &amp; Academic Foundation
-                    </h3>
-                    <p className="text-xs font-mono text-cyan-400">
-                      Rathinam College of Arts and Science &bull; Pollachi, Tamil Nadu
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => scrollToFullSection('about')}
-                    className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-mono text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <span>View Section</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+              {/* Technologies Applied */}
+              <div className="space-y-2">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                  Applied Technologies
                 </div>
-
-                <div className="space-y-3 text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
-                  <p>
-                    I am an AI/ML developer focused on bringing algorithms into real-world action. Rather than stopping at notebook prototypes, I build full-stack interactive systems connecting custom machine learning pipelines to telemetry sensors, spatial visuals, and intuitive human experiences.
-                  </p>
-                  <p>
-                    My background combines rigorous foundational programming in C and Java with machine learning workflows in Python, paired with 3D modeling in Blender and game prototyping in Unity.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <span className="px-3 py-1 rounded-lg bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-300">
-                    &bull; Neural Models &amp; Inference
-                  </span>
-                  <span className="px-3 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-xs font-mono text-blue-300">
-                    &bull; Hardware Telemetry &amp; IoT
-                  </span>
-                  <span className="px-3 py-1 rounded-lg bg-indigo-950/40 border border-indigo-500/30 text-xs font-mono text-indigo-300">
-                    &bull; Creative 3D Environments
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* VIEW 3: SKILLS PREVIEW */}
-            {activeTab === 2 && (
-              <div className="space-y-5 animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">
-                      Technical Skills &amp; Learning Frontiers
-                    </h3>
-                    <p className="text-xs font-mono text-cyan-400">
-                      Exact 9 showcased skills &bull; No inflated percentages
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => scrollToFullSection('skills')}
-                    className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-mono text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <span>View 3D Galaxy</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {[
-                    { name: 'C', status: 'Project Applied', cat: 'Systems', color: 'border-cyan-500/40' },
-                    { name: 'Java', status: 'Project Applied', cat: 'OOP', color: 'border-cyan-500/40' },
-                    { name: 'Python', status: 'Project Applied', cat: 'AI/ML', color: 'border-cyan-500/40' },
-                    { name: 'AI Model Building', status: 'Project Applied', cat: 'Deep Learning', color: 'border-cyan-500/40' },
-                    { name: 'Real-Time Projects', status: 'Project Applied', cat: 'IoT & Telemetry', color: 'border-cyan-500/40' },
-                    { name: 'Blender', status: 'Project Applied', cat: '3D Polygonal', color: 'border-cyan-500/40' },
-                    { name: 'Adobe Illustrator', status: 'Project Applied', cat: 'Vector Identity', color: 'border-cyan-500/40' },
-                    { name: 'Unity — Learning', status: 'Active Learner', cat: 'Spatial Simulation', color: 'border-amber-500/40' },
-                    { name: 'AWS — Learning', status: 'Active Learner', cat: 'Cloud Deployment', color: 'border-amber-500/40' },
-                  ].map((s, idx) => (
-                    <div 
-                      key={idx}
-                      className={`p-3 rounded-2xl bg-white/5 border ${s.color} hover:bg-white/10 transition-colors`}
+                <div className="flex flex-wrap gap-2">
+                  {currentSystem.technologies.map((t, tidx) => (
+                    <span
+                      key={tidx}
+                      className="px-2.5 py-1 rounded-lg bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-300"
                     >
-                      <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
-                        <span>{s.cat}</span>
-                        <span className={s.status.includes('Learner') ? 'text-amber-300' : 'text-cyan-300'}>
-                          {s.status.includes('Learner') ? 'Learner' : 'Core'}
-                        </span>
-                      </div>
-                      <h4 className="text-sm font-bold text-white">
-                        {s.name}
-                      </h4>
-                    </div>
+                      {t}
+                    </span>
                   ))}
                 </div>
               </div>
-            )}
 
-            {/* VIEW 4: PROJECTS PREVIEW */}
-            {activeTab === 3 && (
-              <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">
-                      Featured Practical Systems
-                    </h3>
-                    <p className="text-xs font-mono text-cyan-400">
-                      6 end-to-end engineered platforms
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => scrollToFullSection('projects')}
-                    className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-mono text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <span>View All 6 Cards</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {featuredProjects.slice(0, 4).map((p) => (
-                    <div
-                      key={p.id}
-                      className="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-400/40 transition-colors group/card"
-                    >
-                      <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                        <span className="text-cyan-400 font-bold">{p.badge}</span>
-                        <span className="text-slate-400">{p.status}</span>
-                      </div>
-                      <h4 className="text-sm font-bold text-white group-hover/card:text-cyan-300 transition-colors">
-                        {p.title}
-                      </h4>
-                      <p className="text-xs text-slate-300 font-light line-clamp-2 mt-1">
-                        {p.tagline}
-                      </p>
-                      <div className="flex flex-wrap gap-1 mt-2.5">
-                        {p.technologies.slice(0, 3).map((t, tidx) => (
-                          <span key={tidx} className="px-1.5 py-0.5 rounded bg-black/40 text-[9px] font-mono text-slate-300">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* VIEW 5: CONTACT PREVIEW */}
-            {activeTab === 4 && (
-              <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">
-                      Let's Build Something Intelligent
-                    </h3>
-                    <p className="text-xs font-mono text-cyan-400">
-                      Open for AI/ML engineering, internships &amp; collaborative builds
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => scrollToFullSection('contact')}
-                    className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-mono text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <span>Full Contact Form</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <a
-                    href={`mailto:${personalInfo.contacts.email}`}
-                    className="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 hover:border-cyan-400 transition-colors flex items-center gap-3.5"
-                  >
-                    <div className="p-2.5 rounded-xl bg-cyan-500/20 text-cyan-400">
-                      <Terminal className="w-5 h-5" />
-                    </div>
-                    <div className="truncate">
-                      <div className="text-[10px] font-mono uppercase text-slate-400">Direct Email</div>
-                      <div className="text-sm font-bold text-white truncate">{personalInfo.contacts.email}</div>
-                    </div>
-                  </a>
-
-                  <a
-                    href={personalInfo.contacts.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 hover:border-blue-400 transition-colors flex items-center gap-3.5"
-                  >
-                    <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-400">
-                      <LinkedinIcon className="w-5 h-5" />
-                    </div>
-                    <div className="truncate">
-                      <div className="text-[10px] font-mono uppercase text-slate-400">Professional Profile</div>
-                      <div className="text-sm font-bold text-white truncate">LinkedIn / Dhivesh M</div>
-                    </div>
-                  </a>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 text-xs font-mono text-slate-400">
-                  <span>📍 Pollachi, Tamil Nadu, India</span>
-                  <a
-                    href={personalInfo.contacts.resumePdf}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-cyan-400 hover:text-white underline"
-                  >
-                    Download Official Resume (PDF) &rarr;
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Bottom Preview Controls Bar */}
-            <div className="pt-4 mt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-slate-300">Section {activeTab + 1} of {PREVIEW_SECTIONS.length}</span>
-              </span>
-
-              <div className="flex items-center gap-3">
-                <span className="hidden sm:inline text-slate-400">Click tabs or arrows to inspect</span>
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
                 <button
-                  onClick={() => scrollToFullSection(PREVIEW_SECTIONS[activeTab].id)}
-                  className="text-cyan-300 hover:text-white flex items-center gap-1 font-bold cursor-pointer"
+                  onClick={() => scrollToSection('projects')}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs font-mono flex items-center gap-2 shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-500 transition-all cursor-pointer"
                 >
-                  <span>Explore In Full Page</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <span>Explore All 6 Projects In Full Detail</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
+
+                <a
+                  href={currentSystem.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-500/40 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-2 transition-colors"
+                >
+                  <GithubIcon className="w-4 h-4" />
+                  <span>Inspect Code</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Large Decorative Secondary Hashtag (Lower Left Area - Blurred in Background) */}
-      <div 
-        ref={hashtagBottomRef}
-        className="absolute bottom-6 left-2 sm:left-6 md:left-12 pointer-events-none z-10 select-none"
-        style={{
-          transform: 'rotate(-8deg)',
-          filter: 'blur(3px)',
-          animation: isReducedMotion ? 'none' : 'floatAndBobSlow 9s ease-in-out infinite'
-        }}
-      >
-        <span 
-          className="text-7xl sm:text-9xl md:text-[140px] lg:text-[180px] font-black text-black leading-none block tracking-tighter opacity-80"
-          style={{
-            textShadow: '0 8px 30px rgba(0, 0, 0, 0.7)'
-          }}
-        >
-          #
-        </span>
-      </div>
+      {/* Subtle Ground Baseline with Walking Cat Silhouette */}
+      <div className="relative mt-16 max-w-6xl mx-auto">
+        <div className="h-px bg-gradient-to-r from-transparent via-white/15 to-transparent w-full pointer-events-none" />
 
-      {/* Walking Black Cat Silhouette Along the Lower Area (Reference Video Match) */}
-      <div 
-        ref={catRef}
-        className="absolute bottom-2 sm:bottom-4 left-0 w-full pointer-events-none z-20 overflow-hidden select-none"
-      >
-        {/* Subtle Faint Floor Ambient Line */}
-        <div className="absolute bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
-
-        {/* Animated Walking Cat Moving Horizontally Across the Screen */}
-        <div 
-          className="relative inline-block will-change-transform"
-          style={{
-            animation: isReducedMotion ? 'none' : 'catWalkAcross 14s linear infinite',
-          }}
-        >
-          <img
-            src="/images/walking-cat.webp"
-            alt="Decorative Walking Cat Silhouette"
-            className="w-24 sm:w-28 md:w-32 h-auto select-none pointer-events-none drop-shadow-[0_8px_16px_rgba(10,5,35,0.7)]"
-            loading="eager"
-          />
+        <div className="relative w-full h-12 overflow-hidden pointer-events-none">
+          <div
+            className="absolute bottom-0 left-0 inline-block will-change-transform"
+            style={{
+              animation: isReducedMotion ? 'none' : 'catWalkAcross 16s linear infinite'
+            }}
+          >
+            <img
+              src="/images/walking-cat.webp"
+              alt="Decorative Walking Cat Silhouette"
+              className="w-20 sm:w-24 h-auto opacity-70 drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]"
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+// Bespoke Vector Architectural Illustrations for the 3 Systems
+function SystemArchitectureVisual({ type }) {
+  if (type === 'ai-agents') {
+    return (
+      <svg viewBox="0 0 200 160" className="w-full h-full max-w-[220px]" fill="none">
+        {/* Central Core Agent */}
+        <circle cx="100" cy="80" r="26" fill="#0c1020" stroke="#00f0ff" strokeWidth="2" />
+        <circle cx="100" cy="80" r="16" fill="rgba(0, 240, 255, 0.15)" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3 3" />
+        <circle cx="100" cy="80" r="5" fill="#00f0ff" className="animate-pulse" />
+
+        {/* Orbiting Satellite Sub-Agents */}
+        <g className="animate-spin origin-center" style={{ animationDuration: '20s' }}>
+          <circle cx="45" cy="45" r="14" fill="#0c1020" stroke="#3b82f6" strokeWidth="1.5" />
+          <circle cx="45" cy="45" r="3" fill="#3b82f6" />
+          <line x1="57" y1="55" x2="82" y2="70" stroke="rgba(0, 240, 255, 0.4)" strokeDasharray="2 2" />
+
+          <circle cx="155" cy="45" r="14" fill="#0c1020" stroke="#818cf8" strokeWidth="1.5" />
+          <circle cx="155" cy="45" r="3" fill="#818cf8" />
+          <line x1="143" y1="55" x2="118" y2="70" stroke="rgba(0, 240, 255, 0.4)" strokeDasharray="2 2" />
+
+          <circle cx="45" cy="115" r="14" fill="#0c1020" stroke="#10b981" strokeWidth="1.5" />
+          <circle cx="45" cy="115" r="3" fill="#10b981" />
+          <line x1="57" y1="105" x2="82" y2="90" stroke="rgba(0, 240, 255, 0.4)" strokeDasharray="2 2" />
+
+          <circle cx="155" cy="115" r="14" fill="#0c1020" stroke="#f59e0b" strokeWidth="1.5" />
+          <circle cx="155" cy="115" r="3" fill="#f59e0b" />
+          <line x1="143" y1="105" x2="118" y2="90" stroke="rgba(0, 240, 255, 0.4)" strokeDasharray="2 2" />
+        </g>
+      </svg>
+    );
+  }
+
+  if (type === 'iot-telemetry') {
+    return (
+      <svg viewBox="0 0 200 160" className="w-full h-full max-w-[220px]" fill="none">
+        {/* Hydro Wave Lines */}
+        <path d="M 20 110 Q 55 90 90 110 T 160 110" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+        <path d="M 30 125 Q 65 105 100 125 T 170 125" stroke="#0284c7" strokeWidth="1.5" strokeOpacity="0.7" />
+
+        {/* Microcontroller Edge Node Box */}
+        <rect x="75" y="35" width="50" height="50" rx="10" fill="#0c1020" stroke="#00f0ff" strokeWidth="2" />
+        <rect x="85" y="45" width="30" height="30" rx="6" fill="rgba(0, 240, 255, 0.1)" stroke="#38bdf8" strokeWidth="1" />
+        <circle cx="100" cy="60" r="4" fill="#00f0ff" className="animate-pulse" />
+
+        {/* Sensor Probe Lines extending into water */}
+        <line x1="90" y1="85" x2="90" y2="120" stroke="#00f0ff" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="110" y1="85" x2="110" y2="120" stroke="#00f0ff" strokeWidth="1.5" strokeDasharray="3 3" />
+
+        {/* Radio Broadcast Waves */}
+        <path d="M 70 25 A 35 35 0 0 1 130 25" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="2 2" />
+        <path d="M 60 15 A 50 50 0 0 1 140 15" stroke="#0284c7" strokeWidth="1" strokeLinecap="round" strokeOpacity="0.5" />
+      </svg>
+    );
+  }
+
+  // Neural health / Cognitive Assistant
+  return (
+    <svg viewBox="0 0 200 160" className="w-full h-full max-w-[220px]" fill="none">
+      {/* Neural Network Nodes */}
+      <circle cx="50" cy="50" r="10" fill="#0c1020" stroke="#818cf8" strokeWidth="1.5" />
+      <circle cx="50" cy="110" r="10" fill="#0c1020" stroke="#818cf8" strokeWidth="1.5" />
+
+      <circle cx="100" cy="40" r="12" fill="#0c1020" stroke="#00f0ff" strokeWidth="2" />
+      <circle cx="100" cy="80" r="14" fill="#0c1020" stroke="#38bdf8" strokeWidth="2" />
+      <circle cx="100" cy="120" r="12" fill="#0c1020" stroke="#00f0ff" strokeWidth="2" />
+
+      <circle cx="150" cy="60" r="11" fill="#0c1020" stroke="#a78bfa" strokeWidth="1.5" />
+      <circle cx="150" cy="100" r="11" fill="#0c1020" stroke="#a78bfa" strokeWidth="1.5" />
+
+      {/* Synaptic Interconnections */}
+      <line x1="59" y1="53" x2="90" y2="43" stroke="rgba(0, 240, 255, 0.4)" strokeWidth="1" />
+      <line x1="59" y1="56" x2="88" y2="76" stroke="rgba(0, 240, 255, 0.4)" strokeWidth="1" />
+      <line x1="59" y1="105" x2="88" y2="84" stroke="rgba(0, 240, 255, 0.4)" strokeWidth="1" />
+      <line x1="59" y1="108" x2="90" y2="117" stroke="rgba(0, 240, 255, 0.4)" strokeWidth="1" />
+
+      <line x1="112" y1="43" x2="140" y2="57" stroke="rgba(129, 140, 248, 0.5)" strokeWidth="1" />
+      <line x1="114" y1="80" x2="140" y2="65" stroke="rgba(129, 140, 248, 0.5)" strokeWidth="1" />
+      <line x1="114" y1="80" x2="140" y2="95" stroke="rgba(129, 140, 248, 0.5)" strokeWidth="1" />
+      <line x1="112" y1="117" x2="140" y2="103" stroke="rgba(129, 140, 248, 0.5)" strokeWidth="1" />
+
+      {/* Pulse Center */}
+      <circle cx="100" cy="80" r="4" fill="#00f0ff" className="animate-pulse" />
+    </svg>
   );
 }

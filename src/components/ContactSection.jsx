@@ -1,253 +1,227 @@
 import React, { useState } from 'react';
-import confetti from 'canvas-confetti';
 import { personalInfo } from '../data/portfolioData';
-import { playHoverSound, playJumpSound } from '../utils/audio';
-import { GithubIcon, LinkedinIcon } from './SocialIcons';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Send, 
-  Sparkles, 
-  CheckCircle2 
-} from 'lucide-react';
+import { playHoverSound } from '../utils/audio';
 
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    playJumpSound();
-
-    // Trigger celebratory confetti
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#00f0ff', '#3b82f6', '#ffffff']
-    });
-
     setSubmitted(true);
-
-    // Also prepare mailto link trigger
-    const mailtoUrl = `mailto:${personalInfo.contacts.email}?subject=${encodeURIComponent(
-      formData.subject || 'Portfolio Inquiry for Dhivesh M'
-    )}&body=${encodeURIComponent(
-      `From: ${formData.name} (${formData.email})\n\nMessage:\n${formData.message}`
-    )}`;
-
+    playHoverSound();
     setTimeout(() => {
-      window.location.href = mailtoUrl;
-    }, 1200);
+      setSubmitted(false);
+      setFormState({ name: '', email: '', message: '' });
+    }, 4500);
   };
 
   return (
-    <section id="contact" className="relative py-28 px-6 bg-[#07080b] overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none" />
+    <section id="contact" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#080b1a]">
+      {/* Background Lighting */}
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#ff6bd6]/5 rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="w-[92%] max-w-[1180px] mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-xs font-mono text-cyan-300">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>06 &bull; GET IN TOUCH</span>
+        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-[#9b6bff] uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#9b6bff] shadow-[0_0_8px_#9b6bff]" />
+            <span>Connect &amp; Collaborate</span>
           </div>
-          <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
-            LET'S BUILD <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">SOMETHING MEANINGFUL.</span>
+
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            Let's Build Something <span className="grad-text">Together</span>
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-light">
-            "I'm always interested in exploring ideas, developing useful applications and collaborating on creative technology projects."
+
+          <p className="text-sm sm:text-base text-[#b7bcd6] font-light">
+            Open to internships, AI/ML engineering collaborations, and hackathon prototypes. Reach out anytime.
           </p>
         </div>
 
-        {/* Contact Layout: Info Cards on Left, Interactive Form on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left Column: Direct Contact Channels & Socials */}
-          <div className="lg:col-span-5 space-y-6">
-            <h3 className="text-xl font-bold text-white tracking-wide">
-              Direct Contact Channels
-            </h3>
-
-            {/* Email Card */}
-            <a
-              href={`mailto:${personalInfo.contacts.email}`}
-              onMouseEnter={playHoverSound}
-              className="p-5 rounded-3xl glass-panel border border-white/10 hover:border-cyan-500/40 hover:shadow-[0_4px_25px_rgba(0,240,255,0.15)] flex items-center gap-4 group transition-all"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all">
-                <Mail className="w-6 h-6" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                  Email Address
-                </div>
-                <div className="text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
-                  {personalInfo.contacts.email}
-                </div>
-              </div>
-            </a>
-
-            {/* Phone Card */}
-            <a
-              href={`tel:${personalInfo.contacts.phone}`}
-              onMouseEnter={playHoverSound}
-              className="p-5 rounded-3xl glass-panel border border-white/10 hover:border-cyan-500/40 hover:shadow-[0_4px_25px_rgba(0,240,255,0.15)] flex items-center gap-4 group transition-all"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all">
-                <Phone className="w-6 h-6" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                  Mobile Number
-                </div>
-                <div className="text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
-                  {personalInfo.contacts.phone}
-                </div>
-              </div>
-            </a>
-
-            {/* Location Card */}
-            <div className="p-5 rounded-3xl glass-panel border border-white/10 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                  Location
-                </div>
-                <div className="text-sm sm:text-base font-bold text-white">
-                  {personalInfo.contacts.location}
-                </div>
-              </div>
+        {/* Contact Info Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
+          <a
+            href={`mailto:${personalInfo.contacts.email}`}
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#5b8cff] transition-all group flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#5b8cff] text-xl group-hover:scale-110 transition-transform shrink-0">
+              <i className="fa-regular fa-envelope" />
             </div>
-
-            {/* Social Links Row */}
-            <div className="pt-4 flex items-center gap-4">
-              <a
-                href={personalInfo.contacts.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                onMouseEnter={playHoverSound}
-                className="flex-1 p-4 rounded-2xl glass-panel border border-white/10 hover:border-cyan-500/40 hover:bg-slate-900/80 flex items-center justify-center gap-2 text-xs font-mono text-slate-300 hover:text-cyan-300 transition-all group"
-              >
-                <LinkedinIcon className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-                <span>LinkedIn</span>
-              </a>
-
-              <a
-                href={personalInfo.contacts.github}
-                target="_blank"
-                rel="noreferrer"
-                onMouseEnter={playHoverSound}
-                className="flex-1 p-4 rounded-2xl glass-panel border border-white/10 hover:border-cyan-500/40 hover:bg-slate-900/80 flex items-center justify-center gap-2 text-xs font-mono text-slate-300 hover:text-cyan-300 transition-all group"
-              >
-                <GithubIcon className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-                <span>GitHub</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Right Column: Interactive Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="p-8 sm:p-10 rounded-3xl glass-panel border border-cyan-500/30 shadow-2xl shadow-cyan-500/10">
-              <h3 className="text-2xl font-bold text-white mb-2">
-                Send a Direct Message
-              </h3>
-              <p className="text-xs font-mono text-slate-400 mb-8">
-                Whether you have an idea for a project, a hackathon invitation, or an internship opportunity, feel free to reach out.
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">Direct Email</span>
+              <p className="text-sm font-bold text-white group-hover:text-[#5be6ff] transition-colors truncate">
+                {personalInfo.contacts.email}
               </p>
+            </div>
+          </a>
 
-              {submitted ? (
-                <div className="py-12 text-center space-y-4 animate-in fade-in zoom-in duration-300">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300">
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
-                  <h4 className="text-xl font-bold text-white">Thank You for Connecting!</h4>
-                  <p className="text-sm text-slate-300 font-mono max-w-md mx-auto">
-                    Your message is opening your default mail client to dispatch directly to <strong className="text-cyan-300">{personalInfo.contacts.email}</strong>.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. John Doe"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 focus:border-cyan-400 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
-                      />
-                    </div>
+          <a
+            href={`tel:${personalInfo.contacts.phone}`}
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#9b6bff] transition-all group flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#9b6bff] text-xl group-hover:scale-110 transition-transform shrink-0">
+              <i className="fa-solid fa-phone" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">Direct Call</span>
+              <p className="text-sm font-bold text-white group-hover:text-[#5be6ff] transition-colors truncate">
+                {personalInfo.contacts.phone}
+              </p>
+            </div>
+          </a>
 
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-                        Your Email
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="e.g. john@company.com"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 focus:border-cyan-400 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
-                      />
-                    </div>
-                  </div>
+          <a
+            href={personalInfo.contacts.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#ff6bd6] transition-all group flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#ff6bd6] text-xl group-hover:scale-110 transition-transform shrink-0">
+              <i className="fa-brands fa-linkedin-in" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">LinkedIn Profile</span>
+              <p className="text-sm font-bold text-white group-hover:text-[#5be6ff] transition-colors truncate">
+                dhivesh-m-198b74377
+              </p>
+            </div>
+          </a>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-                      Subject
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      placeholder="e.g. AI Collaboration / Internship Opportunity"
-                      className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 focus:border-cyan-400 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
-                    />
-                  </div>
+          <a
+            href={personalInfo.contacts.github}
+            target="_blank"
+            rel="noreferrer"
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#5be6ff] transition-all group flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#5be6ff] text-xl group-hover:scale-110 transition-transform shrink-0">
+              <i className="fa-brands fa-github" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">GitHub Profile</span>
+              <p className="text-sm font-bold text-white group-hover:text-[#5be6ff] transition-colors truncate">
+                github.com/DHIVESH-M
+              </p>
+            </div>
+          </a>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-                      Message
-                    </label>
-                    <textarea
-                      rows={5}
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tell me about your idea or project..."
-                      className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 focus:border-cyan-400 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    onMouseEnter={playHoverSound}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm tracking-wider font-mono flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all cursor-pointer"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>Send Message to Dhivesh</span>
-                  </button>
-                </form>
-              )}
+          <div
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 transition-all flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#4ade80] text-xl shrink-0">
+              <i className="fa-solid fa-location-dot" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">Location</span>
+              <p className="text-sm font-bold text-white truncate">
+                Pollachi, Coimbatore, TN, India
+              </p>
             </div>
           </div>
+
+          <a
+            href={personalInfo.contacts.resumePdf}
+            download="Dhivesh_M_Resume.pdf"
+            onMouseEnter={playHoverSound}
+            className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#5b8cff] transition-all group flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#5b8cff] text-xl group-hover:scale-110 transition-transform shrink-0">
+              <i className="fa-solid fa-file-arrow-down" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7d84a6]">Curriculum Vitae</span>
+              <p className="text-sm font-bold text-white group-hover:text-[#5be6ff] transition-colors truncate">
+                Download Official PDF
+              </p>
+            </div>
+          </a>
+        </div>
+
+        {/* Interactive Quick Dispatch Form */}
+        <div className="max-w-2xl mx-auto p-8 sm:p-10 rounded-3xl glass-panel border border-white/10 shadow-2xl">
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 text-center">
+            Send a Direct Message
+          </h3>
+          <p className="text-xs text-[#b7bcd6] text-center mb-6 font-mono">
+            Directly delivered to my primary communication inbox.
+          </p>
+
+          {submitted ? (
+            <div className="p-6 rounded-2xl bg-[#4ade80]/15 border border-[#4ade80]/40 text-center space-y-2 animate-in zoom-in-95 duration-200">
+              <i className="fa-solid fa-check-circle text-2xl text-[#4ade80]" />
+              <h4 className="text-base font-bold text-white">Message Dispatched!</h4>
+              <p className="text-xs text-[#b7bcd6]">Thank you! I will review your message and reply promptly.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-mono text-[#7d84a6] mb-1.5 uppercase">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formState.name}
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    placeholder="e.g. Alex"
+                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#9b6bff] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-[#7d84a6] mb-1.5 uppercase">Your Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={formState.email}
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    placeholder="alex@domain.com"
+                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#9b6bff] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono text-[#7d84a6] mb-1.5 uppercase">Project Details / Message</label>
+                <textarea
+                  rows="4"
+                  required
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  placeholder="Tell me about your opportunity, hackathon idea, or project scope..."
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#9b6bff] transition-colors resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-xl font-bold text-sm text-white shadow-lg transition-transform hover:scale-[1.01] cursor-pointer flex items-center justify-center gap-2"
+                style={{
+                  background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                }}
+              >
+                <i className="fa-solid fa-paper-plane text-xs" />
+                <span>Send Message</span>
+              </button>
+            </form>
+          )}
         </div>
       </div>
+
+      {/* Floating Hire Me Button (Corner) */}
+      <a
+        href="#contact"
+        onClick={playHoverSound}
+        className="fixed bottom-7 right-7 z-[900] px-5 py-3 rounded-full text-white font-bold text-xs sm:text-sm flex items-center gap-2.5 shadow-[0_12px_40px_-8px_rgba(120,110,255,0.6)] hover:scale-105 transition-all cursor-pointer"
+        style={{
+          background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+        }}
+      >
+        <i className="fa-solid fa-handshake" />
+        <span className="hidden sm:inline">Hire Me</span>
+      </a>
     </section>
   );
 }
