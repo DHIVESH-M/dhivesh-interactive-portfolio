@@ -30,16 +30,16 @@ export default function ProjectsSection() {
       <div className="w-[92%] max-w-[1180px] mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-[#5be6ff] uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#5be6ff] shadow-[0_0_8px_#5be6ff]" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-xs font-mono text-[#00f5ff] uppercase tracking-widest backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00f5ff] shadow-[0_0_8px_#00f5ff] animate-ping" />
             <span>Engineering Portfolio</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-black font-heading text-white tracking-tight">
             Things I've <span className="grad-text">Built</span>
           </h2>
 
-          <p className="text-sm sm:text-base text-[#b7bcd6] leading-relaxed font-light">
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
             Real implementations spanning AI agents, environmental IoT hardware, rural market platforms, and emergency safety telemetry.
           </p>
 
@@ -54,12 +54,12 @@ export default function ProjectsSection() {
                 }}
                 className={`px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all cursor-pointer ${
                   activeFilter === cat
-                    ? 'text-white shadow-[0_0_20px_rgba(91,140,255,0.4)]'
-                    : 'text-[#b7bcd6] bg-white/5 hover:text-white hover:bg-white/10 border border-white/10'
+                    ? 'text-white shadow-[0_0_25px_rgba(0,245,255,0.4)]'
+                    : 'text-slate-300 bg-white/5 hover:text-white hover:bg-white/10 border border-white/10'
                 }`}
                 style={{
                   background: activeFilter === cat
-                    ? 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                    ? 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
                     : undefined
                 }}
               >
@@ -206,7 +206,7 @@ function ProjectCard({ project, onOpenDetails }) {
     const rotY = ((x - midX) / midX) * 8;
 
     setTransformStyle(`perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`);
-    setGlareStyle(`radial-gradient(circle at ${x}px ${y}px, rgba(155, 107, 255, 0.22) 0%, transparent 60%)`);
+    setGlareStyle(`radial-gradient(circle at ${x}px ${y}px, rgba(0, 245, 255, 0.28) 0%, rgba(168, 85, 247, 0.15) 35%, transparent 65%)`);
   };
 
   const onMouseLeave = () => {
@@ -223,8 +223,8 @@ function ProjectCard({ project, onOpenDetails }) {
         transform: transformStyle,
         transition: 'transform 0.15s ease-out'
       }}
-      className={`group relative rounded-3xl glass-panel border border-white/10 hover:border-[#9b6bff]/60 hover:shadow-[0_20px_50px_-15px_rgba(155,107,255,0.4)] flex flex-col justify-between overflow-hidden will-change-transform ${
-        project.isUpcoming ? 'opacity-85 border-dashed border-[#9b6bff]/40' : ''
+      className={`group relative rounded-3xl glass-panel border border-white/10 card-3d-interactive hover:border-[#00f5ff]/60 hover:shadow-[0_20px_50px_-15px_rgba(0,245,255,0.4)] flex flex-col justify-between overflow-hidden will-change-transform ${
+        project.isUpcoming ? 'opacity-85 border-dashed border-[#00f5ff]/40' : ''
       }`}
     >
       {/* Specular Glare */}
@@ -236,7 +236,7 @@ function ProjectCard({ project, onOpenDetails }) {
       {/* Card Media Header */}
       <div
         onClick={onOpenDetails}
-        className="relative w-full h-52 bg-[#090d1e] border-b border-white/10 overflow-hidden cursor-pointer"
+        className="relative w-full h-52 bg-[#070b18] border-b border-white/10 overflow-hidden cursor-pointer"
       >
         <img
           src={project.image}
@@ -244,20 +244,20 @@ function ProjectCard({ project, onOpenDetails }) {
           className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
         />
 
-        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-[#080b1a]/85 border border-white/15 text-[10px] font-mono text-[#b7bcd6] backdrop-blur-md">
+        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-[#07080b]/90 border border-white/15 text-[10px] font-mono text-slate-200 backdrop-blur-md">
           {project.category}
         </div>
 
-        <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-[#9b6bff]/20 border border-[#9b6bff]/50 text-[10px] font-mono text-[#5be6ff] backdrop-blur-md">
+        <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/50 text-[10px] font-mono text-[#00f5ff] backdrop-blur-md">
           {project.badge}
         </div>
 
         {/* Hover inspect overlay */}
-        <div className="absolute inset-0 bg-[#080b1a]/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 backdrop-blur-[2px] transition-opacity duration-200">
+        <div className="absolute inset-0 bg-[#07080b]/70 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 backdrop-blur-[2px] transition-opacity duration-200">
           <span
-            className="px-4 py-2 rounded-full text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg"
+            className="px-4 py-2 rounded-full text-white text-xs font-bold font-mono flex items-center gap-2 shadow-[0_0_20px_rgba(0,245,255,0.5)]"
             style={{
-              background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+              background: 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
             }}
           >
             <i className="fa-regular fa-eye text-xs" />
@@ -269,15 +269,15 @@ function ProjectCard({ project, onOpenDetails }) {
       {/* Card Body */}
       <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
         <div className="space-y-2">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-[#9b6bff] font-bold">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#00f5ff] font-bold">
             {project.status}
           </span>
 
-          <h3 className="text-xl font-bold text-white group-hover:text-[#5be6ff] transition-colors">
+          <h3 className="text-xl font-bold font-heading text-white group-hover:text-[#00f5ff] transition-colors">
             {project.title}
           </h3>
 
-          <p className="text-xs text-[#b7bcd6] leading-relaxed font-light line-clamp-3">
+          <p className="text-xs text-slate-300 leading-relaxed font-light line-clamp-3">
             {project.description}
           </p>
         </div>
@@ -288,7 +288,7 @@ function ProjectCard({ project, onOpenDetails }) {
             {project.technologies.map((t, idx) => (
               <span
                 key={idx}
-                className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-[#b7bcd6]"
+                className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 hover:border-cyan-400/40 hover:text-white transition-colors"
               >
                 {t}
               </span>
@@ -300,7 +300,7 @@ function ProjectCard({ project, onOpenDetails }) {
         <div className="pt-4 border-t border-white/10 flex items-center justify-between">
           <button
             onClick={onOpenDetails}
-            className="text-xs font-mono font-bold text-[#5be6ff] hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-all cursor-pointer"
+            className="text-xs font-mono font-bold text-[#00f5ff] hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-all cursor-pointer"
           >
             <span>{project.isUpcoming ? 'Explore R&D' : 'Details'}</span>
             <i className="fa-solid fa-arrow-right text-[10px]" />
@@ -313,7 +313,7 @@ function ProjectCard({ project, onOpenDetails }) {
                 target="_blank"
                 rel="noreferrer"
                 title="View GitHub Repository"
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-[#b7bcd6] hover:text-white hover:border-[#9b6bff] transition-colors"
+                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-[#00f5ff] transition-colors"
               >
                 <i className="fa-brands fa-github text-sm" />
               </a>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import ParticleBackground from './components/ParticleBackground';
+import ThreeBackground from './components/3d/ThreeBackground';
+import CyberGlowCursor from './components/CyberGlowCursor';
 import Navbar from './components/Navbar';
 import HeroVideoSection from './components/HeroVideoSection';
 import AboutSection from './components/AboutSection';
@@ -13,9 +14,12 @@ export default function App() {
   const [isReducedMotion] = useState(false);
 
   return (
-    <div className="relative min-h-screen bg-[#080b1a] text-[#f4f5fb] overflow-x-hidden selection:bg-[#9b6bff]/40 selection:text-white">
-      {/* Background Interactive Particle Canvas & Glowing Blobs */}
-      <ParticleBackground isReducedMotion={isReducedMotion} />
+    <div className="relative min-h-screen bg-[#07080b] text-[#f8fafc] overflow-x-hidden selection:bg-[#00f5ff]/30 selection:text-white">
+      {/* Interactive Full-Page Three.js 3D Background with Neural Particles, Floating Polyhedra & Horizon Cyber Grid */}
+      <ThreeBackground isReducedMotion={isReducedMotion} />
+
+      {/* Cyber Ambient Cursor Glow Aura */}
+      <CyberGlowCursor isReducedMotion={isReducedMotion} />
 
       {/* Top Navigation Bar */}
       <Navbar />

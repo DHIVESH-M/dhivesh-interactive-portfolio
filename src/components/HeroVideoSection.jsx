@@ -316,19 +316,19 @@ export default function HeroVideoSection() {
         {/* Center Title & Tagline */}
         <div className="text-center max-w-4xl space-y-4">
           <div className="inline-block relative">
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-white drop-shadow-[0_12px_40px_rgba(0,0,0,0.95)]">
-              DHIVESH <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400">M</span>
+            <h1 className="text-5xl sm:text-7xl md:text-8xl font-black font-heading tracking-tight text-white drop-shadow-[0_12px_40px_rgba(0,0,0,0.95)]">
+              DHIVESH <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f5ff] via-[#38bdf8] to-[#a855f7]">M</span>
             </h1>
-            <div className="absolute -inset-1 blur-2xl bg-cyan-500/20 -z-10" />
+            <div className="absolute -inset-1 blur-2xl bg-cyan-500/25 -z-10" />
           </div>
 
           <p className="text-lg sm:text-2xl text-slate-200 font-light max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-            "Turning Ideas Into <span className="text-cyan-300 font-medium">Intelligent Real-World</span> Experiences."
+            "Turning Ideas Into <span className="text-[#00f5ff] font-medium text-glow-cyan">Intelligent Real-World</span> Experiences."
           </p>
 
-          <div className="flex items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-mono text-slate-400">
+          <div className="flex items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-mono text-slate-300">
             <span>Pollachi, Tamil Nadu</span>
-            <span className="text-cyan-500">&bull;</span>
+            <span className="text-[#00f5ff]">&bull;</span>
             <span>Rathinam College (AIML '28)</span>
           </div>
         </div>
@@ -336,15 +336,15 @@ export default function HeroVideoSection() {
         {/* Scroll Instruction */}
         <button
           onClick={scrollToShatter}
-          className="pointer-events-auto flex flex-col items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors group cursor-pointer"
+          className="pointer-events-auto flex flex-col items-center gap-2 text-slate-400 hover:text-[#00f5ff] transition-colors group cursor-pointer"
         >
-          <span className="text-xs font-mono uppercase tracking-widest group-hover:text-cyan-300">
+          <span className="text-xs font-mono uppercase tracking-widest group-hover:text-[#00f5ff]">
             Scroll to Shatter Glass &amp; Reveal 3D Skills
           </span>
           <div className="w-6 h-10 rounded-full border border-slate-600/80 flex items-start justify-center p-1 group-hover:border-cyan-400/80 transition-colors">
-            <div className="w-1.5 h-2.5 bg-cyan-400 rounded-full animate-bounce" />
+            <div className="w-1.5 h-2.5 bg-[#00f5ff] rounded-full animate-bounce shadow-[0_0_8px_#00f5ff]" />
           </div>
-          <ChevronDown className="w-4 h-4 animate-pulse text-cyan-400" />
+          <ChevronDown className="w-4 h-4 animate-pulse text-[#00f5ff]" />
         </button>
       </div>
 
@@ -358,12 +358,12 @@ export default function HeroVideoSection() {
       >
         {/* Center Banner */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none max-w-md px-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/85 border border-cyan-400/40 text-[11px] font-mono text-cyan-300 mb-3 backdrop-blur-md">
-            <Zap className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/85 border border-cyan-400/40 text-[11px] font-mono text-[#00f5ff] mb-3 backdrop-blur-md">
+            <Zap className="w-3.5 h-3.5 text-[#00f5ff] animate-pulse" />
             <span>3D GLASS SHATTERED &bull; CAPABILITIES UNLOCKED</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
-            SKILLS ON THE <span className="text-cyan-400">FRAGMENTS</span>
+          <h2 className="text-3xl sm:text-5xl font-black font-heading text-white tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
+            SKILLS ON THE <span className="grad-text">FRAGMENTS</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 font-mono mt-1 drop-shadow">
             Interactive Three.js shards drifting through 3D space

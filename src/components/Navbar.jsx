@@ -80,23 +80,23 @@ export default function Navbar() {
               e.preventDefault();
               scrollToSection('home');
             }}
-            className="flex items-center gap-2.5 font-extrabold text-lg tracking-tight text-white group cursor-pointer"
+            className="flex items-center gap-2.5 font-heading font-extrabold text-lg tracking-tight text-white group cursor-pointer"
           >
             <span
-              className="w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-sm text-white shadow-[0_0_25px_rgba(120,110,255,0.4)] group-hover:scale-105 transition-transform"
+              className="w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-sm text-white shadow-[0_0_25px_rgba(0,245,255,0.4)] group-hover:scale-105 transition-transform"
               style={{
-                background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                background: 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
               }}
             >
               DM
             </span>
-            <span className="font-bold text-white group-hover:text-[#5be6ff] transition-colors">
+            <span className="font-bold font-heading text-white group-hover:text-[#00f5ff] transition-colors">
               Dhivesh M
             </span>
           </a>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1.5">
+          {/* Desktop & Tablet Nav Links */}
+          <nav className="hidden md:flex items-center gap-1.5">
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -105,12 +105,12 @@ export default function Navbar() {
                   onClick={() => scrollToSection(item.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? 'text-white font-semibold shadow-[0_0_20px_rgba(155,107,255,0.4)]'
-                      : 'text-[#b7bcd6] hover:text-white hover:bg-white/5'
+                      ? 'text-white font-semibold font-heading shadow-[0_0_20px_rgba(0,245,255,0.4)]'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }`}
                   style={{
                     background: isActive
-                      ? 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                      ? 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
                       : 'transparent'
                   }}
                 >
@@ -125,9 +125,9 @@ export default function Navbar() {
             {/* Hire Me CTA Button */}
             <button
               onClick={() => scrollToSection('contact')}
-              className="hidden sm:inline-flex px-5 py-2 rounded-full font-semibold text-xs text-white shadow-[0_0_25px_rgba(120,110,255,0.4)] hover:scale-105 transition-all cursor-pointer"
+              className="hidden sm:inline-flex px-5 py-2 rounded-full font-bold font-heading text-xs text-white shadow-[0_0_25px_rgba(0,245,255,0.4)] hover:scale-105 hover:shadow-[0_0_35px_rgba(168,85,247,0.6)] transition-all cursor-pointer"
               style={{
-                background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                background: 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
               }}
             >
               Hire Me
@@ -137,7 +137,7 @@ export default function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open navigation menu"
-              className="lg:hidden w-9 h-9 rounded-xl border border-white/15 flex items-center justify-center bg-white/5 text-white cursor-pointer"
+              className="md:hidden w-9 h-9 rounded-xl border border-white/15 flex items-center justify-center bg-white/5 text-white cursor-pointer"
             >
               <i className="fa-solid fa-bars text-sm" />
             </button>

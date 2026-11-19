@@ -42,16 +42,16 @@ export default function SkillsSection({ isReducedMotion = false }) {
       <div className="w-[92%] max-w-[1180px] mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/15 bg-white/5 text-xs font-mono text-[#9b6bff] uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#9b6bff] shadow-[0_0_8px_#9b6bff]" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-xs font-mono text-[#00f5ff] uppercase tracking-widest backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00f5ff] shadow-[0_0_8px_#00f5ff] animate-ping" />
             <span>Technical Capabilities</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-black font-heading text-white tracking-tight">
             Technical <span className="grad-text">Toolkit</span>
           </h2>
 
-          <p className="text-sm sm:text-base text-[#b7bcd6] leading-relaxed font-light">
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
             Core programming languages, neural architectures, and creative development tools applied across hackathon systems and academic builds.
           </p>
 
@@ -66,12 +66,12 @@ export default function SkillsSection({ isReducedMotion = false }) {
                 }}
                 className={`px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all cursor-pointer ${
                   activeCategory === cat
-                    ? 'text-white shadow-[0_0_20px_rgba(155,107,255,0.4)]'
-                    : 'text-[#b7bcd6] bg-white/5 hover:text-white hover:bg-white/10 border border-white/10'
+                    ? 'text-white shadow-[0_0_25px_rgba(0,245,255,0.4)]'
+                    : 'text-slate-300 bg-white/5 hover:text-white hover:bg-white/10 border border-white/10'
                 }`}
                 style={{
                   background: activeCategory === cat
-                    ? 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)'
+                    ? 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)'
                     : undefined
                 }}
               >
@@ -82,12 +82,12 @@ export default function SkillsSection({ isReducedMotion = false }) {
         </div>
 
         {/* Skills Grid with Animated Moving Glowing Highlights */}
-        <div className="space-y-10 mb-24">
+        <div className="space-y-10 mb-20">
           {filteredCategories.map((catGroup, gIdx) => (
             <div key={catGroup.category} className="space-y-4">
-              <h3 className="text-sm font-mono uppercase tracking-wider text-[#9b6bff] font-bold flex items-center gap-2">
+              <h3 className="text-sm font-mono uppercase tracking-wider text-[#00f5ff] font-bold flex items-center gap-2">
                 <span>// {catGroup.category}</span>
-                <span className="h-px flex-1 bg-white/10" />
+                <span className="h-px flex-1 bg-gradient-to-r from-cyan-500/40 to-transparent" />
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -103,11 +103,6 @@ export default function SkillsSection({ isReducedMotion = false }) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Note on Visual Placeholders */}
-        <div className="text-center max-w-xl mx-auto mb-20 p-4 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono text-[#7d84a6]">
-          <span className="text-[#5be6ff] font-bold">ℹ Note:</span> Percentages represent initial visual curriculum placeholders &amp; hackathon domain engagement.
         </div>
 
         {/* Hand-Drawn Animated Skill Flow Journey Connecting About to Skills */}
@@ -167,52 +162,52 @@ function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
   return (
     <div
       onMouseEnter={playHoverSound}
-      className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-[#9b6bff]/50 hover:shadow-[0_15px_40px_-15px_rgba(155,107,255,0.4)] transition-all duration-300 group cursor-default flex flex-col justify-between space-y-4"
+      className="p-6 rounded-2xl glass-panel border border-white/10 card-3d-interactive group cursor-default flex flex-col justify-between space-y-4"
     >
       {/* Top Header: Icon, Name & Percentage */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#9b6bff] text-lg group-hover:scale-110 group-hover:text-[#5be6ff] transition-all">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#00f5ff] text-lg group-hover:scale-110 group-hover:border-[#00f5ff]/50 group-hover:shadow-[0_0_15px_rgba(0,245,255,0.4)] transition-all">
               <i className={`fa-solid ${skill.icon}`} />
             </div>
             <div>
-              <h4 className="text-base font-bold text-white group-hover:text-[#5be6ff] transition-colors">
+              <h4 className="text-base font-bold font-heading text-white group-hover:text-[#00f5ff] transition-colors">
                 {skill.name}
               </h4>
-              <span className="text-[10px] font-mono text-[#7d84a6]">
+              <span className="text-[10px] font-mono text-cyan-400/80">
                 {skill.status}
               </span>
             </div>
           </div>
 
           {/* Animated Numeric Counter */}
-          <div className="font-mono font-bold text-lg text-[#5b8cff] tracking-tight">
+          <div className="font-mono font-bold text-lg text-[#00f5ff] tracking-tight text-glow-cyan">
             {displayPct}%
           </div>
         </div>
 
-        <p className="text-xs text-[#b7bcd6] leading-relaxed font-light line-clamp-2">
+        <p className="text-xs text-slate-300 leading-relaxed font-light line-clamp-2">
           {skill.desc}
         </p>
       </div>
 
       {/* Progress Track with Visibly Traveling Highlight & Glowing Endpoint */}
       <div className="space-y-1.5 pt-2">
-        <div className="w-full h-2.5 rounded-full bg-white/5 border border-white/10 overflow-hidden relative">
+        <div className="w-full h-2.5 rounded-full bg-slate-900/80 border border-white/10 overflow-hidden relative">
           {/* Main Animated Growing Fill Bar */}
           <div
             className="h-full rounded-full relative transition-all duration-75"
             style={{
               width: `${displayPct}%`,
-              background: 'linear-gradient(135deg, #5b8cff 0%, #9b6bff 55%, #ff6bd6 100%)',
-              boxShadow: '0 0 12px rgba(155, 107, 255, 0.6)'
+              background: 'linear-gradient(135deg, #00f5ff 0%, #a855f7 55%, #ec4899 100%)',
+              boxShadow: '0 0 16px rgba(0, 245, 255, 0.7)'
             }}
           >
             {/* Visibly Traveling Light Pulse Sweeping Across the Filled Line */}
             {hasAnimated && !isReducedMotion && (
               <div
-                className="absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none skill-travel-highlight"
+                className="absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/90 to-transparent pointer-events-none skill-travel-highlight"
                 style={{
                   filter: 'blur(1px)'
                 }}
@@ -222,9 +217,9 @@ function SkillProgressBarCard({ skill, hasAnimated, delay, isReducedMotion }) {
         </div>
 
         {/* Track Subtext */}
-        <div className="flex justify-between text-[10px] font-mono text-[#7d84a6]">
+        <div className="flex justify-between text-[10px] font-mono text-slate-400">
           <span>0%</span>
-          <span>Target: {skill.pct}%</span>
+          <span className="text-[#00f5ff] font-semibold">Target: {skill.pct}%</span>
         </div>
       </div>
     </div>
