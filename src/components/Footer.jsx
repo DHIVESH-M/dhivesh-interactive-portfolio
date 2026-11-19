@@ -11,9 +11,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#060814] z-10">
+    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#07080b]/80 backdrop-blur-md z-10">
       <div className="w-[92%] max-w-[1180px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="text-xs sm:text-sm text-[#7d84a6] font-mono text-center sm:text-left">
+        <div className="text-xs sm:text-sm text-slate-400 font-mono text-center sm:text-left">
           &copy; {CURRENT_YEAR} {personalInfo.name}. Crafted with curiosity &amp; code.
         </div>
 

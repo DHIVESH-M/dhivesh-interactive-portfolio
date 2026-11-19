@@ -18,7 +18,7 @@ export default function SkillsSection({ isReducedMotion = false }) {
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.01, rootMargin: '150px' }
     );
 
     if (sectionRef.current) {
@@ -35,7 +35,7 @@ export default function SkillsSection({ isReducedMotion = false }) {
     : skillsWithPercentages.filter((c) => c.category === activeCategory);
 
   return (
-    <section id="skills" ref={sectionRef} className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#080b1a]/95">
+    <section id="skills" ref={sectionRef} className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[550px] bg-[#9b6bff]/5 rounded-full blur-[140px] pointer-events-none" />
 

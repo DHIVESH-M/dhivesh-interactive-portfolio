@@ -22,7 +22,7 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#070a18]">
+    <section id="projects" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Lighting */}
       <div className="absolute top-1/4 right-10 w-[550px] h-[550px] bg-[#5b8cff]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-[#9b6bff]/5 rounded-full blur-[130px] pointer-events-none" />
