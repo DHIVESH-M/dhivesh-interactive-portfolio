@@ -1,6 +1,7 @@
 import React from 'react';
 import { technicalSkills } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
+import Skills3DConstellation from './3d/Skills3DConstellation';
 import { 
   Sparkles, 
   Terminal, 
@@ -45,6 +46,11 @@ export default function SkillsSection() {
               <span className="text-slate-300">Active Learner / Exploring</span>
             </div>
           </div>
+        </div>
+
+        {/* Three.js Interactive 3D Skill Constellation Galaxy */}
+        <div className="mb-14">
+          <Skills3DConstellation />
         </div>
 
         {/* Skills Categories Grid */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { personalInfo } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
+import About3DCore from './3d/About3DCore';
 import { 
   GraduationCap, 
   MapPin, 
@@ -37,8 +38,8 @@ export default function AboutSection() {
 
         {/* Main Grid: Portrait Card + Narrative */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Portrait Card with Cybernetic Frame */}
-          <div className="lg:col-span-5 flex justify-center">
+          {/* Left Column: Portrait Card with Cybernetic Frame & Three.js 3D Core */}
+          <div className="lg:col-span-5 flex flex-col items-center gap-6">
             <div className="relative w-full max-w-sm group">
               {/* Outer Glowing Border */}
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 opacity-60 blur-lg group-hover:opacity-100 group-hover:blur-xl transition-all duration-500" />
@@ -81,6 +82,23 @@ export default function AboutSection() {
                     AIML '28
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Three.js 3D Cybernetic Holographic Core Card */}
+            <div className="w-full max-w-sm p-4 rounded-3xl glass-panel border border-cyan-500/25 relative group overflow-hidden">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-[10px] font-mono text-cyan-400">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  THREE.JS &bull; 3D CYBERNETIC CORE
+                </span>
+                <span className="text-slate-500">INTERACTIVE ORBIT</span>
+              </div>
+              <div className="w-full h-48">
+                <About3DCore />
+              </div>
+              <div className="text-[10px] font-mono text-center text-slate-400 pt-2 border-t border-white/5">
+                Hover &amp; move cursor to dynamically rotate 3D geometry
               </div>
             </div>
           </div>

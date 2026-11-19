@@ -48,100 +48,14 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* Projects Grid */}
+        {/* Projects Grid with 3D Interactive Perspective Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProjects.map((project, idx) => (
-            <div
+          {featuredProjects.map((project) => (
+            <Project3DCard
               key={project.id}
-              className="group rounded-3xl glass-panel border border-white/10 hover:border-cyan-500/50 hover:shadow-[0_10px_35px_rgba(0,240,255,0.15)] transition-all duration-300 flex flex-col justify-between overflow-hidden"
-            >
-              {/* Card Top: Interactive Thumbnail Illustration */}
-              <div 
-                onClick={() => openProjectModal(project)}
-                className="relative w-full h-52 bg-[#0d121e] border-b border-white/5 overflow-hidden cursor-pointer"
-              >
-                {/* Custom SVG Architecture Illustration */}
-                <div className="w-full h-full p-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                  <ProjectIllustration type={project.id} />
-                </div>
-
-                {/* Status Badge overlay */}
-                <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-[#07080b]/80 border border-white/10 text-[10px] font-mono text-slate-300 backdrop-blur-md">
-                  {project.category}
-                </div>
-
-                {/* Status tag */}
-                <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 backdrop-blur-md">
-                  {project.status}
-                </div>
-
-                {/* Quick inspect hover pill */}
-                <div className="absolute inset-0 bg-[#07080b]/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 backdrop-blur-[2px] transition-opacity duration-200">
-                  <span className="px-3.5 py-1.5 rounded-full bg-cyan-500 text-slate-950 text-xs font-bold font-mono flex items-center gap-1.5 shadow-lg shadow-cyan-500/40">
-                    <Eye className="w-3.5 h-3.5" />
-                    Inspect Architecture
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
-
-                  <p className="text-xs font-mono text-cyan-400/80">
-                    {project.tagline}
-                  </p>
-
-                  <p className="text-xs text-slate-400 leading-relaxed font-light line-clamp-3">
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* Tech Tags */}
-                <div className="pt-2">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.technologies.map((tech, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="px-2 py-0.5 rounded-md bg-slate-900 border border-white/10 text-[10px] font-mono text-slate-300"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Card Action Links */}
-                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                  <button
-                    onClick={() => openProjectModal(project)}
-                    className="text-xs font-mono text-cyan-400 hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-all cursor-pointer"
-                  >
-                    <span>View Project</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-
-                  <div className="flex items-center gap-2">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="View GitHub Repository"
-                        className="p-2 rounded-lg bg-slate-900 border border-white/10 text-slate-400 hover:text-white hover:border-cyan-500/40 transition-colors"
-                      >
-                        <GithubIcon className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+              project={project}
+              openProjectModal={openProjectModal}
+            />
           ))}
         </div>
       </div>
@@ -239,6 +153,131 @@ export default function ProjectsSection() {
         </div>
       )}
     </section>
+  );
+}
+
+// 3D Perspective Tilt Card with Specular Glare following mouse
+function Project3DCard({ project, openProjectModal }) {
+  const cardRef = React.useRef(null);
+  const [transformStyle, setTransformStyle] = React.useState('');
+  const [glareStyle, setGlareStyle] = React.useState('none');
+
+  const onMouseMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const midX = rect.width / 2;
+    const midY = rect.height / 2;
+    const rotX = ((y - midY) / midY) * -10;
+    const rotY = ((x - midX) / midX) * 10;
+
+    setTransformStyle(`perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`);
+    setGlareStyle(`radial-gradient(circle at ${x}px ${y}px, rgba(0, 240, 255, 0.22) 0%, transparent 65%)`);
+  };
+
+  const onMouseLeave = () => {
+    setTransformStyle('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
+    setGlareStyle('none');
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{
+        transform: transformStyle,
+        transition: 'transform 0.15s ease-out'
+      }}
+      className="group relative rounded-3xl glass-panel border border-white/10 hover:border-cyan-500/50 hover:shadow-[0_15px_40px_rgba(0,240,255,0.2)] flex flex-col justify-between overflow-hidden will-change-transform"
+    >
+      {/* 3D Dynamic Specular Glare */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-200"
+        style={{ background: glareStyle }}
+      />
+
+      {/* Card Top: Interactive Thumbnail Illustration */}
+      <div 
+        onClick={() => openProjectModal(project)}
+        className="relative w-full h-52 bg-[#0d121e] border-b border-white/5 overflow-hidden cursor-pointer"
+      >
+        <div className="w-full h-full p-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+          <ProjectIllustration type={project.id} />
+        </div>
+
+        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-[#07080b]/80 border border-white/10 text-[10px] font-mono text-slate-300 backdrop-blur-md">
+          {project.category}
+        </div>
+
+        <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 backdrop-blur-md">
+          {project.status}
+        </div>
+
+        <div className="absolute inset-0 bg-[#07080b]/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 backdrop-blur-[2px] transition-opacity duration-200">
+          <span className="px-3.5 py-1.5 rounded-full bg-cyan-500 text-slate-950 text-xs font-bold font-mono flex items-center gap-1.5 shadow-lg shadow-cyan-500/40">
+            <Eye className="w-3.5 h-3.5" />
+            Inspect Architecture
+          </span>
+        </div>
+      </div>
+
+      {/* Card Body */}
+      <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+            {project.title}
+          </h3>
+
+          <p className="text-xs font-mono text-cyan-400/80">
+            {project.tagline}
+          </p>
+
+          <p className="text-xs text-slate-400 leading-relaxed font-light line-clamp-3">
+            {project.description}
+          </p>
+        </div>
+
+        <div className="pt-2">
+          <div className="flex flex-wrap gap-1.5">
+            {project.technologies.map((tech, tIdx) => (
+              <span
+                key={tIdx}
+                className="px-2 py-0.5 rounded-md bg-slate-900 border border-white/10 text-[10px] font-mono text-slate-300"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+          <button
+            onClick={() => openProjectModal(project)}
+            className="text-xs font-mono text-cyan-400 hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-all cursor-pointer"
+          >
+            <span>View Project</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                title="View GitHub Repository"
+                className="p-2 rounded-lg bg-slate-900 border border-white/10 text-slate-400 hover:text-white hover:border-cyan-500/40 transition-colors"
+              >
+                <GithubIcon className="w-4 h-4" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

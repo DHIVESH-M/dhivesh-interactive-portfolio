@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
+import Global3DBackground from './components/3d/Global3DBackground';
 import HeroVideoSection from './components/HeroVideoSection';
 import AboutSection from './components/AboutSection';
 import SkillsSection from './components/SkillsSection';
@@ -14,6 +15,9 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#07080b] text-slate-100 overflow-x-hidden">
+      {/* Ambient Three.js 3D Particle Space */}
+      <Global3DBackground />
+
       {/* 1. Top Navigation Bar */}
       <Navbar 
         isReducedMotion={isReducedMotion} 
