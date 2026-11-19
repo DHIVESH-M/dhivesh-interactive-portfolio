@@ -239,11 +239,20 @@ export default function HandDrawnSkillFlow() {
               <stop offset="100%" stopColor="#ffffff" />
             </linearGradient>
 
-            <linearGradient id="rocketFlameGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+            <linearGradient id="rocketFirePlumeOuter" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="15%" stopColor="#ffea00" />
+              <stop offset="35%" stopColor="#ff5500" />
+              <stop offset="70%" stopColor="#dc2626" />
+              <stop offset="100%" stopColor="#7f1d1d" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="rocketFirePlumeMid" x1="100%" y1="0%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="#ffffff" />
               <stop offset="25%" stopColor="#00f5ff" />
-              <stop offset="65%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+              <stop offset="55%" stopColor="#ffdd00" />
+              <stop offset="85%" stopColor="#ff4400" />
+              <stop offset="100%" stopColor="#ff0000" stopOpacity="0" />
             </linearGradient>
 
             <linearGradient id="rocketCanopyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -251,9 +260,11 @@ export default function HandDrawnSkillFlow() {
               <stop offset="100%" stopColor="#3b82f6" />
             </linearGradient>
 
-            <radialGradient id="rocketThrusterGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.8" />
-              <stop offset="45%" stopColor="#f59e0b" stopOpacity="0.4" />
+            <radialGradient id="rocketIntenseFireGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="18%" stopColor="#00f5ff" stopOpacity="0.95" />
+              <stop offset="40%" stopColor="#ffaa00" stopOpacity="0.85" />
+              <stop offset="70%" stopColor="#ff2200" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
 
@@ -301,35 +312,75 @@ export default function HandDrawnSkillFlow() {
 
           {/* Animated 3D Cyber Rocket Surfing Along the Path Tangent */}
           <g ref={rocketRef} id="journeyRocket" className="pointer-events-none" style={{ opacity: 1, willChange: 'transform' }}>
-            {/* Plasma Thruster Radiant Energy Halo */}
-            <circle cx="-18" cy="0" r="42" fill="url(#rocketThrusterGlow)" opacity="0.9" />
+            {/* Intense Radiant Engine Blaze Aura */}
+            <circle cx="-22" cy="0" r="54" fill="url(#rocketIntenseFireGlow)" className="rocket-thruster-blaze" />
             
-            {/* Dynamic Plasma Exhaust Flame (Pointing to -X) */}
-            <g className="animate-pulse">
-              {/* Outer Amber/Orange Thermal Expansion */}
+            {/* Blazing Roaring Fire Jet Plume Blasting From Back */}
+            <g id="rocketFireJet" className="pointer-events-none">
+              {/* Outer Roaring Thermal Fire Plume */}
               <path
-                d="M -16 -9 Q -45 -7 -70 0 Q -45 7 -16 9 Z"
-                fill="url(#rocketFlameGrad)"
+                d="M -19 -14 Q -55 -22 -115 0 Q -55 22 -19 14 Z"
+                fill="url(#rocketFirePlumeOuter)"
                 filter="url(#rocketGlowFilter)"
+                className="rocket-flame-outer"
               />
-              {/* Electric Cyan Jet Stream Core */}
+              
+              {/* Top Side Flame Flare Tongue */}
               <path
-                d="M -16 -5 Q -36 -2.5 -52 0 Q -36 2.5 -16 5 Z"
+                d="M -19 -10 Q -52 -25 -88 -11 Q -48 -5 -19 -6 Z"
+                fill="#ff3700"
+                opacity="0.95"
+                className="rocket-flame-outer"
+              />
+              
+              {/* Bottom Side Flame Flare Tongue */}
+              <path
+                d="M -19 10 Q -52 25 -88 11 Q -48 5 -19 6 Z"
+                fill="#ff3700"
+                opacity="0.95"
+                className="rocket-flame-outer"
+              />
+
+              {/* Middle Golden-Yellow Blazing Core Plume */}
+              <path
+                d="M -19 -9 Q -48 -11 -82 0 Q -48 11 -19 9 Z"
+                fill="url(#rocketFirePlumeMid)"
+                filter="url(#rocketGlowFilter)"
+                className="rocket-flame-mid"
+              />
+
+              {/* Cyan Hyperdrive Supersonic Jet Stream */}
+              <path
+                d="M -19 -5 Q -38 -4 -60 0 Q -38 4 -19 5 Z"
                 fill="#00f5ff"
                 filter="url(#rocketGlowFilter)"
+                className="rocket-flame-mid"
               />
-              {/* Superheated White-Hot Core */}
+
+              {/* Superheated White-Hot Ignition Needle */}
               <path
-                d="M -16 -2.5 Q -28 -1 -38 0 Q -28 1 -16 2.5 Z"
+                d="M -19 -2.5 Q -30 -1.5 -44 0 Q -30 1.5 -19 2.5 Z"
                 fill="#ffffff"
+                className="rocket-flame-core"
               />
+
+              {/* Mach Shock Diamonds in Exhaust Plume */}
+              <polygon points="-30,0 -34,-4 -38,0 -34,4" fill="#ffffff" stroke="#00f5ff" strokeWidth="1" filter="drop-shadow(0 0 6px #00f5ff)" />
+              <polygon points="-48,0 -52,-3.2 -56,0 -52,3.2" fill="#ffffff" stroke="#00f5ff" strokeWidth="0.8" opacity="0.95" />
+              <polygon points="-66,0 -70,-2.5 -74,0 -70,2.5" fill="#ffea00" stroke="#ff4500" strokeWidth="0.8" opacity="0.9" />
+              <polygon points="-84,0 -87,-1.8 -90,0 -87,1.8" fill="#ff4500" opacity="0.8" />
             </g>
 
-            {/* Spark Trail Stardust Particles */}
-            <circle cx="-76" cy="-4" r="2.4" fill="#00f5ff" opacity="0.9" filter="drop-shadow(0 0 4px #00f5ff)" />
-            <circle cx="-92" cy="5" r="1.8" fill="#38bdf8" opacity="0.7" />
-            <circle cx="-108" cy="-3" r="1.4" fill="#f59e0b" opacity="0.6" />
-            <circle cx="-124" cy="2" r="1" fill="#ef4444" opacity="0.4" />
+            {/* High-Velocity Ejected Fiery Sparks & Burning Embers */}
+            <g transform="translate(-20, 0)">
+              <circle cx="0" cy="-4" r="2.8" fill="#ffea00" className="rocket-spark-1" filter="drop-shadow(0 0 6px #ffea00)" />
+              <circle cx="0" cy="4" r="2.4" fill="#ff4500" className="rocket-spark-2" filter="drop-shadow(0 0 6px #ff4500)" />
+              <circle cx="0" cy="-1" r="3" fill="#00f5ff" className="rocket-spark-3" filter="drop-shadow(0 0 6px #00f5ff)" />
+              <circle cx="0" cy="6" r="2.2" fill="#ff6b00" className="rocket-spark-4" filter="drop-shadow(0 0 6px #ff6b00)" />
+              <circle cx="0" cy="-8" r="2" fill="#ffffff" className="rocket-spark-2" filter="drop-shadow(0 0 4px #ffffff)" />
+              <circle cx="0" cy="2" r="1.8" fill="#ff0055" className="rocket-spark-1" />
+              <circle cx="0" cy="-3" r="1.5" fill="#f59e0b" className="rocket-spark-3" />
+            </g>
 
             {/* Delta Wings & Stabilizers */}
             <path d="M -6 -9 L -22 -24 L -15 -9 Z" fill="#0369a1" stroke="#38bdf8" strokeWidth="1.5" />
@@ -369,13 +420,15 @@ export default function HandDrawnSkillFlow() {
         {/* Mobile Vertical Flow Spine & Mobile Rocket Follower */}
         <div className="absolute left-6 top-4 bottom-4 w-1 bg-gradient-to-b from-cyan-400 via-blue-500 to-amber-400 md:hidden rounded-full shadow-[0_0_12px_rgba(0,240,255,0.6)]" />
         
-        {/* Mobile Animated Rocket Icon */}
+        {/* Mobile Animated Rocket Icon with Blazing Fire Exhaust */}
         <div
           ref={mobileRocketRef}
           className="absolute left-6 -translate-x-1/2 md:hidden z-30 pointer-events-none transition-all duration-75"
           style={{ top: '2%', opacity: 1 }}
         >
-          <div className="w-9 h-9 rounded-full bg-[#070b18] border-2 border-cyan-400 shadow-[0_0_20px_#00f5ff] flex items-center justify-center text-base rotate-90">
+          <div className="relative w-10 h-10 rounded-full bg-[#070b18] border-2 border-cyan-400 shadow-[0_0_20px_#00f5ff] flex items-center justify-center text-lg rotate-90">
+            {/* Blazing Flame Exhaust Behind Mobile Rocket */}
+            <span className="absolute -left-3 w-4 h-2 bg-gradient-to-l from-yellow-300 via-orange-500 to-transparent rounded-full animate-pulse filter blur-[1px]" />
             🚀
           </div>
         </div>
