@@ -301,12 +301,6 @@ export default function HandDrawnSkillFlow() {
 
           {/* Animated 3D Cyber Rocket Surfing Along the Path Tangent */}
           <g ref={rocketRef} id="journeyRocket" className="pointer-events-none" style={{ opacity: 1, willChange: 'transform' }}>
-            {/* Pulsating HUD Orbit Reticle */}
-            <circle cx="10" cy="0" r="32" fill="none" stroke="#00f5ff" strokeWidth="1" strokeDasharray="5 5" opacity="0.6" />
-            <text x="10" y="-36" fill="#00f5ff" fontFamily="'JetBrains Mono', monospace" fontSize="9" fontWeight="800" textAnchor="middle" filter="drop-shadow(0 0 6px #00f5ff)">
-              ▲ TRAJECTORY ROCKET
-            </text>
-
             {/* Plasma Thruster Radiant Energy Halo */}
             <circle cx="-18" cy="0" r="42" fill="url(#rocketThrusterGlow)" opacity="0.9" />
             
