@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
+export default function Hero3DCanvas({ scrollProgress }) {
   const mountRef = useRef(null);
   const shardsRef = useRef([]);
   const sceneRef = useRef(null);
@@ -16,6 +16,10 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     const container = mountRef.current;
     if (!container) return;
 
+    let isVisible = true;
+    let animId = null;
+    const disposables = [];
+
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -27,15 +31,32 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     camera.position.z = 50;
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
 
+    // Context loss handling
+    const canvasEl = renderer.domElement;
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      if (animId) cancelAnimationFrame(animId);
+    };
+    const handleContextRestored = () => {
+      animate();
+    };
+
+    canvasEl.addEventListener('webglcontextlost', handleContextLost, false);
+    canvasEl.addEventListener('webglcontextrestored', handleContextRestored, false);
+
     // 2. Lighting for Glass Shards
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
     const cyanLight = new THREE.PointLight(0x00f0ff, 3, 100);
@@ -47,46 +68,42 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     scene.add(blueRimLight);
 
     // 3. Create 3D Glass Shards
-    const shardCount = 36;
+    const shardCount = 32;
     const shards = [];
 
-    // Glass material with cyan specular rim and transmission look
-    const glassMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x9be8ff,
-      emissive: 0x003355,
-      roughness: 0.15,
-      metalness: 0.1,
-      transmission: 0.85,
-      ior: 1.5,
+    // Efficient MeshStandardMaterial with high specular shine (avoids heavy transmission render targets on integrated GPUs)
+    const glassMaterial = new THREE.MeshStandardMaterial({
+      color: 0xc8f4ff,
+      emissive: 0x002b44,
+      roughness: 0.1,
+      metalness: 0.15,
       transparent: true,
-      opacity: 0.8,
-      reflectivity: 0.9,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
+      opacity: 0.75,
       side: THREE.DoubleSide
     });
+    disposables.push(glassMaterial);
 
     const wireMaterial = new THREE.LineBasicMaterial({
       color: 0x00f0ff,
       transparent: true,
       opacity: 0.4
     });
+    disposables.push(wireMaterial);
 
     for (let i = 0; i < shardCount; i++) {
-      // Create varied sharp shard shapes using 3-sided cones or flattened tetrahedrons
-      const radius = Math.random() * 2.5 + 1.2;
-      const height = Math.random() * 4.5 + 2.0;
-      const geom = new THREE.ConeGeometry(radius, height, 3);
-      geom.scale(1, Math.random() * 0.4 + 0.1, 1); // Flatten into a shard
+      const radius = Math.random() * 2.2 + 1.2;
+      const h = Math.random() * 4.2 + 2.0;
+      const geom = new THREE.ConeGeometry(radius, h, 3);
+      geom.scale(1, Math.random() * 0.35 + 0.12, 1);
+      disposables.push(geom);
 
       const mesh = new THREE.Mesh(geom, glassMaterial);
       
-      // Wireframe edge accent
       const wireGeom = new THREE.WireframeGeometry(geom);
+      disposables.push(wireGeom);
       const wire = new THREE.LineSegments(wireGeom, wireMaterial);
       mesh.add(wire);
 
-      // Initial center distribution (near the glass plane z=0)
       const angle = (i / shardCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
       const distFromCenter = Math.random() * 14 + 2;
 
@@ -97,11 +114,10 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
       mesh.position.set(initX, initY, initZ);
       mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
 
-      // Trajectory velocity when shattered
       const spread = Math.random() * 35 + 20;
       const targetX = Math.cos(angle) * spread + (Math.random() - 0.5) * 15;
       const targetY = Math.sin(angle) * spread + (Math.random() - 0.5) * 15;
-      const targetZ = Math.random() * 40 + 10; // explodes towards screen
+      const targetZ = Math.random() * 40 + 10;
 
       const rotSpeedX = (Math.random() - 0.5) * 8;
       const rotSpeedY = (Math.random() - 0.5) * 8;
@@ -122,7 +138,7 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     shardsRef.current = shards;
 
     // 4. Floating 3D Sparkle Dust Particles
-    const sparkleCount = 120;
+    const sparkleCount = 80;
     const sparkleGeom = new THREE.BufferGeometry();
     const sparklePositions = new Float32Array(sparkleCount * 3);
 
@@ -140,6 +156,7 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
       opacity: 0.6,
       blending: THREE.AdditiveBlending
     });
+    disposables.push(sparkleGeom, sparkleMat);
 
     const sparkles = new THREE.Points(sparkleGeom, sparkleMat);
     scene.add(sparkles);
@@ -160,6 +177,7 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
       if (!container) return;
       const w = container.clientWidth;
       const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -168,36 +186,46 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('resize', handleResize);
 
+    // Pause when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animId) {
+          animate();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
     // 6. Animation Loop
-    let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       const delta = clock.getDelta();
       const p = progressRef.current;
 
-      // Camera tilt with smooth damping
       targetCamX += (mouseX - targetCamX) * 0.08;
       targetCamY += (mouseY - targetCamY) * 0.08;
       camera.position.x = targetCamX;
       camera.position.y = targetCamY;
       camera.lookAt(0, 0, 0);
 
-      // Calculate shatter explosion factor (0 before 38%, ramps up to 1.0 by 70%)
       const shatterProgress = Math.max(0, Math.min(1, (p - 0.38) / 0.35));
 
       shards.forEach((item) => {
         const { mesh, initPos, targetPos, initRot, rotSpeed, baseScale } = item;
 
-        // Position interpolation
         mesh.position.lerpVectors(initPos, targetPos, shatterProgress);
-
-        // Rotation spin based on shatter progress
         mesh.rotation.x = initRot.x + rotSpeed.x * shatterProgress;
         mesh.rotation.y = initRot.y + rotSpeed.y * shatterProgress;
         mesh.rotation.z = initRot.z + rotSpeed.z * shatterProgress;
 
-        // Scale & Visibility
         if (shatterProgress > 0.01) {
           mesh.visible = true;
           const s = baseScale * (0.8 + shatterProgress * 0.4);
@@ -208,7 +236,6 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
         }
       });
 
-      // Ambient sparkle rotation
       sparkles.rotation.y += delta * 0.1;
       sparkles.rotation.x += delta * 0.05;
 
@@ -219,9 +246,19 @@ export default function Hero3DCanvas({ scrollProgress, hasShattered }) {
     animate();
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animId);
+      canvasEl.removeEventListener('webglcontextlost', handleContextLost);
+      canvasEl.removeEventListener('webglcontextrestored', handleContextRestored);
+      if (animId) cancelAnimationFrame(animId);
+
+      disposables.forEach((item) => {
+        if (item && typeof item.dispose === 'function') {
+          item.dispose();
+        }
+      });
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }

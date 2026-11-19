@@ -5,13 +5,13 @@ import { playHoverSound } from '../../utils/audio';
 const SKILLS_NODES = [
   { name: 'Java', category: 'Programming', color: '#00f0ff', pos: [0, 8, 0] },
   { name: 'C', category: 'Programming', color: '#38bdf8', pos: [-7, 3, 4] },
-  { name: 'AI Model Dev', category: 'Artificial Intelligence', color: '#00f0ff', pos: [6, 4, -3] },
-  { name: 'Machine Learning', category: 'Artificial Intelligence', color: '#3b82f6', pos: [7, -3, 3] },
-  { name: 'Real-time AI', category: 'Artificial Intelligence', color: '#60a5fa', pos: [-6, -4, -4] },
+  { name: 'Python', category: 'Programming', color: '#60a5fa', pos: [7, 3, 4] },
+  { name: 'AI Model Building', category: 'Artificial Intelligence', color: '#00f0ff', pos: [6, 4, -4] },
+  { name: 'Real-Time Projects', category: 'Artificial Intelligence', color: '#38bdf8', pos: [-6, -4, -4] },
   { name: 'Blender', category: 'Creative Tech', color: '#f97316', pos: [-4, 6, -5] },
-  { name: 'Unity (Learner)', category: 'Creative Tech', color: '#fbbf24', pos: [3, -7, -4] },
-  { name: 'Illustrator', category: 'Creative Tech', color: '#f59e0b', pos: [5, 5, 5] },
-  { name: 'AWS (Learner)', category: 'Cloud Computing', color: '#f59e0b', pos: [-5, -6, 5] }
+  { name: 'Adobe Illustrator', category: 'Creative Tech', color: '#f59e0b', pos: [5, 5, 5] },
+  { name: 'Unity — Learning', category: 'Creative Tech', color: '#fbbf24', pos: [3, -7, -4] },
+  { name: 'AWS — Learning', category: 'Cloud Computing', color: '#fbbf24', pos: [-5, -6, 5] }
 ];
 
 export default function Skills3DConstellation() {
@@ -22,6 +22,10 @@ export default function Skills3DConstellation() {
     const container = mountRef.current;
     if (!container) return;
 
+    let isVisible = true;
+    let animId = null;
+    const disposables = [];
+
     const width = container.clientWidth || 600;
     const height = container.clientHeight || 450;
 
@@ -29,10 +33,28 @@ export default function Skills3DConstellation() {
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
     camera.position.z = 24;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
+
+    // Graceful WebGL Context Loss Handling
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      if (animId) cancelAnimationFrame(animId);
+    };
+
+    const handleContextRestored = () => {
+      animate();
+    };
+
+    const canvasEl = renderer.domElement;
+    canvasEl.addEventListener('webglcontextlost', handleContextLost, false);
+    canvasEl.addEventListener('webglcontextrestored', handleContextRestored, false);
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
@@ -56,6 +78,7 @@ export default function Skills3DConstellation() {
     });
     const sphereLines = new THREE.LineSegments(wireframe, lineMat);
     rootGroup.add(sphereLines);
+    disposables.push(sphereWireGeom, wireframe, lineMat);
 
     // Center Pulsing Core
     const coreGeom = new THREE.SphereGeometry(1.5, 16, 16);
@@ -67,17 +90,22 @@ export default function Skills3DConstellation() {
     });
     const centerCore = new THREE.Mesh(coreGeom, coreMat);
     rootGroup.add(centerCore);
+    disposables.push(coreGeom, coreMat);
 
     // Create 3D Nodes
     const raycastMeshes = [];
     const nodeMeshes = [];
+
+    // Shared sphere geometry for high efficiency on Intel UHD graphics
+    const sharedNodeGeom = new THREE.SphereGeometry(0.85, 16, 16);
+    const sharedHaloGeom = new THREE.RingGeometry(1.1, 1.25, 32);
+    disposables.push(sharedNodeGeom, sharedHaloGeom);
 
     SKILLS_NODES.forEach((skill, idx) => {
       const nodeGroup = new THREE.Group();
       nodeGroup.position.set(...skill.pos);
 
       // Node Sphere
-      const geom = new THREE.SphereGeometry(0.85, 16, 16);
       const mat = new THREE.MeshStandardMaterial({
         color: new THREE.Color(skill.color),
         emissive: new THREE.Color(skill.color),
@@ -85,21 +113,22 @@ export default function Skills3DConstellation() {
         roughness: 0.2,
         metalness: 0.5
       });
-      const mesh = new THREE.Mesh(geom, mat);
+      const mesh = new THREE.Mesh(sharedNodeGeom, mat);
       mesh.userData = { skill, idx };
       nodeGroup.add(mesh);
       raycastMeshes.push(mesh);
+      disposables.push(mat);
 
       // Outer Halo Ring
-      const haloGeom = new THREE.RingGeometry(1.1, 1.25, 32);
       const haloMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(skill.color),
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.5
       });
-      const halo = new THREE.Mesh(haloGeom, haloMat);
+      const halo = new THREE.Mesh(sharedHaloGeom, haloMat);
       nodeGroup.add(halo);
+      disposables.push(haloMat);
 
       // Connecting Line to Center
       const lineGeom = new THREE.BufferGeometry().setFromPoints([
@@ -113,6 +142,7 @@ export default function Skills3DConstellation() {
       });
       const rayLine = new THREE.Line(lineGeom, rayLineMat);
       rootGroup.add(rayLine);
+      disposables.push(lineGeom, rayLineMat);
 
       rootGroup.add(nodeGroup);
       nodeMeshes.push({ group: nodeGroup, mesh, halo, skill });
@@ -137,6 +167,7 @@ export default function Skills3DConstellation() {
     });
     const netLines = new THREE.LineSegments(netGeom, netMat);
     rootGroup.add(netLines);
+    disposables.push(netGeom, netMat);
 
     // Raycasting & Mouse Interaction
     const raycaster = new THREE.Raycaster();
@@ -183,6 +214,7 @@ export default function Skills3DConstellation() {
       if (!container) return;
       const w = container.clientWidth;
       const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -190,12 +222,27 @@ export default function Skills3DConstellation() {
 
     window.addEventListener('resize', handleResize);
 
+    // Intersection Observer to pause rendering when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animId) {
+          animate();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(container);
+
     // Animation Loop
-    let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
-      const delta = clock.getDelta();
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       const t = clock.getElapsedTime();
 
       // Inertia & Auto-rotation
@@ -209,8 +256,8 @@ export default function Skills3DConstellation() {
       centerCore.rotation.y = t * 0.4;
       centerCore.rotation.z = t * 0.2;
 
-      // Billboarding halos so they always face camera
-      nodeMeshes.forEach(({ group, halo }) => {
+      // Billboarding halos
+      nodeMeshes.forEach(({ halo }) => {
         halo.quaternion.copy(camera.quaternion);
       });
 
@@ -240,11 +287,22 @@ export default function Skills3DConstellation() {
     animate();
 
     return () => {
+      observer.disconnect();
       container.removeEventListener('pointermove', onPointerMove);
       container.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animId);
+      canvasEl.removeEventListener('webglcontextlost', handleContextLost);
+      canvasEl.removeEventListener('webglcontextrestored', handleContextRestored);
+      if (animId) cancelAnimationFrame(animId);
+
+      // Clean up all GPU resources
+      disposables.forEach((item) => {
+        if (item && typeof item.dispose === 'function') {
+          item.dispose();
+        }
+      });
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -254,7 +312,7 @@ export default function Skills3DConstellation() {
   }, [hoveredSkill]);
 
   return (
-    <div className="relative w-full h-[450px] rounded-3xl glass-panel border border-cyan-500/20 overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-[420px] rounded-3xl glass-panel border border-cyan-500/20 overflow-hidden flex items-center justify-center">
       {/* Three.js Canvas Container */}
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 

@@ -2,15 +2,9 @@ import React from 'react';
 import { learningJourney } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
 import { 
-  Milestone, 
-  Sparkles, 
-  Clock, 
   Award, 
   Compass, 
-  BookOpen,
-  ArrowRight,
-  CheckCircle2,
-  Hourglass
+  CheckCircle2
 } from 'lucide-react';
 
 export default function LearningJourneySection() {

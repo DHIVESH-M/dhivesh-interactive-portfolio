@@ -6,12 +6,9 @@ import {
   GraduationCap, 
   MapPin, 
   Cpu, 
-  Layers, 
   Code2, 
-  Sparkles, 
-  ExternalLink,
-  BrainCircuit,
-  Boxes
+  BrainCircuit, 
+  Boxes 
 } from 'lucide-react';
 
 export default function AboutSection() {

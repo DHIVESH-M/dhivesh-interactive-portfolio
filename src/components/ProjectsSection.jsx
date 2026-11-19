@@ -3,12 +3,7 @@ import { featuredProjects } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
 import { GithubIcon } from './SocialIcons';
 import { 
-  FolderGit2, 
-  ExternalLink, 
-  Layers, 
-  Cpu, 
   X, 
-  Sparkles, 
   CheckCircle,
   Eye,
   Radio,

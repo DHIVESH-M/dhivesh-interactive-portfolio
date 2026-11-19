@@ -8,6 +8,10 @@ export default function About3DCore() {
     const container = mountRef.current;
     if (!container) return;
 
+    let isVisible = true;
+    let animId = null;
+    const disposables = [];
+
     const width = container.clientWidth || 320;
     const height = container.clientHeight || 320;
 
@@ -15,10 +19,27 @@ export default function About3DCore() {
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
     camera.position.z = 15;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
+
+    // Context loss handling
+    const canvasEl = renderer.domElement;
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      if (animId) cancelAnimationFrame(animId);
+    };
+    const handleContextRestored = () => {
+      animate();
+    };
+
+    canvasEl.addEventListener('webglcontextlost', handleContextLost, false);
+    canvasEl.addEventListener('webglcontextrestored', handleContextRestored, false);
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -47,6 +68,7 @@ export default function About3DCore() {
     });
     const innerMesh = new THREE.Mesh(innerGeom, innerMat);
     coreGroup.add(innerMesh);
+    disposables.push(innerGeom, innerMat);
 
     // 2. Wireframe Cage (Icosahedron)
     const cageGeom = new THREE.IcosahedronGeometry(4.2, 1);
@@ -58,6 +80,7 @@ export default function About3DCore() {
     });
     const cageMesh = new THREE.LineSegments(cageWireGeom, cageMat);
     coreGroup.add(cageMesh);
+    disposables.push(cageGeom, cageWireGeom, cageMat);
 
     // 3. Orbital Ring 1
     const ring1Geom = new THREE.TorusGeometry(5.2, 0.08, 16, 64);
@@ -70,6 +93,7 @@ export default function About3DCore() {
     const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
     ring1.rotation.x = Math.PI / 3;
     coreGroup.add(ring1);
+    disposables.push(ring1Geom, ring1Mat);
 
     // 4. Orbital Ring 2
     const ring2Geom = new THREE.TorusGeometry(5.8, 0.06, 16, 64);
@@ -83,9 +107,10 @@ export default function About3DCore() {
     ring2.rotation.y = Math.PI / 4;
     ring2.rotation.x = -Math.PI / 6;
     coreGroup.add(ring2);
+    disposables.push(ring2Geom, ring2Mat);
 
     // 5. Orbital Particles
-    const orbPartCount = 40;
+    const orbPartCount = 35;
     const orbPartGeom = new THREE.BufferGeometry();
     const orbPartPos = new Float32Array(orbPartCount * 3);
 
@@ -108,6 +133,7 @@ export default function About3DCore() {
     });
     const orbPoints = new THREE.Points(orbPartGeom, orbPartMat);
     coreGroup.add(orbPoints);
+    disposables.push(orbPartGeom, orbPartMat);
 
     // Mouse Interaction
     let mouseX = 0;
@@ -130,11 +156,39 @@ export default function About3DCore() {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
+    const handleResize = () => {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Intersection Observer to pause when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animId) {
+          animate();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(container);
+
     // Animation Loop
-    let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       const t = clock.getElapsedTime();
 
       // Smooth mouse follow
@@ -161,8 +215,19 @@ export default function About3DCore() {
     animate();
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+      canvasEl.removeEventListener('webglcontextlost', handleContextLost);
+      canvasEl.removeEventListener('webglcontextrestored', handleContextRestored);
+      if (animId) cancelAnimationFrame(animId);
+
+      disposables.forEach((item) => {
+        if (item && typeof item.dispose === 'function') {
+          item.dispose();
+        }
+      });
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -174,7 +239,7 @@ export default function About3DCore() {
   return (
     <div
       ref={mountRef}
-      className="w-full h-full min-h-[260px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+      className="w-full h-full min-h-[220px] flex items-center justify-center cursor-grab active:cursor-grabbing"
     />
   );
 }

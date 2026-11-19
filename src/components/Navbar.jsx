@@ -6,8 +6,7 @@ import {
   Menu, 
   X, 
   FileText, 
-  Sparkles, 
-  Send 
+  Sparkles 
 } from 'lucide-react';
 import { toggleAudioMute, getAudioMuted, playHoverSound } from '../utils/audio';
 

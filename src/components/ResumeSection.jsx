@@ -5,12 +5,8 @@ import {
   FileText, 
   Download, 
   ExternalLink, 
-  GraduationCap, 
-  Award, 
   Sparkles, 
-  CheckCircle,
-  Eye,
-  FileCheck
+  FileCheck 
 } from 'lucide-react';
 
 export default function ResumeSection() {

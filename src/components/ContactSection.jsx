@@ -8,10 +8,8 @@ import {
   Phone, 
   MapPin, 
   Send, 
-  Download, 
   Sparkles, 
-  CheckCircle2, 
-  MessageSquare
+  CheckCircle2 
 } from 'lucide-react';
 
 export default function ContactSection() {

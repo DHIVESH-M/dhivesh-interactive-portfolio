@@ -6,29 +6,24 @@ import { playShatterSound, playHoverSound } from '../utils/audio';
 import Hero3DCanvas from './3d/Hero3DCanvas';
 import { 
   ChevronDown, 
-  Sparkles, 
   Play, 
   Pause, 
   RotateCcw, 
   Sliders, 
-  Film,
-  Zap
+  Zap 
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function HeroVideoSection({ isReducedMotion = false }) {
+export default function HeroVideoSection() {
   const triggerRef = useRef(null);
   const videoRef = useRef(null);
   const videoWrapperRef = useRef(null);
   const reticleRef = useRef(null);
 
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoDuration, setVideoDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasShattered, setHasShattered] = useState(false);
-  const [showControls, setShowControls] = useState(true);
   const [cursorTarget, setCursorTarget] = useState({ active: false, x: 0, y: 0 });
 
   const isSeekingRef = useRef(false);
@@ -114,7 +109,7 @@ export default function HeroVideoSection({ isReducedMotion = false }) {
       } else {
         video.currentTime = clamped;
       }
-    } catch (e) {
+    } catch {
       isSeekingRef.current = false;
     }
   };
@@ -129,8 +124,6 @@ export default function HeroVideoSection({ isReducedMotion = false }) {
     video.playsInline = true;
 
     const onLoadedMetadata = () => {
-      setVideoLoaded(true);
-      setVideoDuration(video.duration || 0);
       safeSeek(0.01); // show opening frame immediately
     };
 

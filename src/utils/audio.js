@@ -41,12 +41,12 @@ export const playHoverSound = () => {
 
     osc.start();
     osc.stop(audioCtx.currentTime + 0.05);
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };
 
-// Playful puppy bark / click jump boop
+// Interactive tactile click / action sound
 export const playJumpSound = () => {
   if (isMuted) return;
   try {
@@ -66,7 +66,7 @@ export const playJumpSound = () => {
 
     osc.start();
     osc.stop(audioCtx.currentTime + 0.15);
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };
@@ -94,7 +94,7 @@ export const playShatterSound = () => {
       osc.start(audioCtx.currentTime + idx * 0.02);
       osc.stop(audioCtx.currentTime + idx * 0.02 + 0.25);
     });
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };

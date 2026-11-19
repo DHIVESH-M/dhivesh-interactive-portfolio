@@ -40,6 +40,13 @@ export const technicalSkills = [
         description: "Low-level memory management, systems programming, procedural algorithms, and embedded logic.",
         icon: "c",
         experience: "Foundational"
+      },
+      {
+        name: "Python",
+        status: "Project Applied",
+        description: "Data processing, machine learning workflows, automation scripts, and neural model prototyping.",
+        icon: "python",
+        experience: "Core"
       }
     ]
   },
@@ -47,21 +54,14 @@ export const technicalSkills = [
     category: "Artificial Intelligence",
     items: [
       {
-        name: "AI Model Development",
+        name: "AI Model Building",
         status: "Project Applied",
         description: "Developing custom neural architectures, fine-tuning model parameters, and algorithmic evaluation.",
         icon: "brain-circuit",
         experience: "Specialized"
       },
       {
-        name: "Machine Learning",
-        status: "Project Applied",
-        description: "Supervised and unsupervised learning, data preprocessing, feature engineering, and model validation.",
-        icon: "network",
-        experience: "Specialized"
-      },
-      {
-        name: "Real-time AI Projects",
+        name: "Real-Time Projects",
         status: "Project Applied",
         description: "Integrating intelligent decision models into real-time pipelines, sensor streams, and edge systems.",
         icon: "zap",
@@ -73,7 +73,7 @@ export const technicalSkills = [
     category: "Creative Technologies",
     items: [
       {
-        name: "Unity",
+        name: "Unity — Learning",
         status: "Learner",
         description: "Exploring real-time 3D simulation, interactive gameplay mechanics, spatial environments, and physics.",
         icon: "gamepad-2",
@@ -99,7 +99,7 @@ export const technicalSkills = [
     category: "Cloud Computing",
     items: [
       {
-        name: "AWS",
+        name: "AWS — Learning",
         status: "Learner",
         description: "Understanding core cloud architecture, compute instances, cloud storage, and deployment fundamentals.",
         icon: "cloud",
@@ -271,12 +271,12 @@ export const learningJourney = [
 
 export const heroGlassFragments = [
   { id: 1, label: "Java", category: "Programming", top: "18%", left: "14%", rotate: "-8deg", delay: 0.1 },
-  { id: 2, label: "AI Model Dev", category: "AI", top: "26%", left: "78%", rotate: "12deg", delay: 0.2 },
-  { id: 3, label: "Machine Learning", category: "AI", top: "42%", left: "10%", rotate: "6deg", delay: 0.3 },
-  { id: 4, label: "Real-time AI", category: "AI", top: "68%", left: "16%", rotate: "-14deg", delay: 0.4 },
-  { id: 5, label: "C Language", category: "Programming", top: "72%", left: "82%", rotate: "10deg", delay: 0.5 },
+  { id: 2, label: "Python", category: "Programming", top: "22%", left: "46%", rotate: "4deg", delay: 0.2 },
+  { id: 3, label: "C Language", category: "Programming", top: "26%", left: "78%", rotate: "12deg", delay: 0.3 },
+  { id: 4, label: "AI Model Building", category: "Artificial Intelligence", top: "42%", left: "10%", rotate: "6deg", delay: 0.4 },
+  { id: 5, label: "Real-Time Projects", category: "Artificial Intelligence", top: "68%", left: "16%", rotate: "-14deg", delay: 0.5 },
   { id: 6, label: "Blender 3D", category: "Creative", top: "54%", left: "84%", rotate: "-6deg", delay: 0.6 },
-  { id: 7, label: "Unity (Learner)", category: "Creative", top: "84%", left: "34%", rotate: "8deg", delay: 0.7 },
-  { id: 8, label: "Illustrator", category: "Creative", top: "82%", left: "64%", rotate: "-10deg", delay: 0.8 },
-  { id: 9, label: "AWS (Learner)", category: "Cloud", top: "22%", left: "46%", rotate: "4deg", delay: 0.9 },
+  { id: 7, label: "Unity — Learning", category: "Creative", top: "84%", left: "34%", rotate: "8deg", delay: 0.7 },
+  { id: 8, label: "Adobe Illustrator", category: "Creative", top: "82%", left: "64%", rotate: "-10deg", delay: 0.8 },
+  { id: 9, label: "AWS — Learning", category: "Cloud", top: "72%", left: "82%", rotate: "10deg", delay: 0.9 },
 ];

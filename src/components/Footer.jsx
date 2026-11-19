@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowUp, Mail, Heart, Sparkles } from 'lucide-react';
+import { ArrowUp, Mail } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import { personalInfo } from '../data/portfolioData';
 import { playHoverSound } from '../utils/audio';
@@ -44,7 +44,7 @@ export default function Footer() {
 
           {/* Copyright & Personality note */}
           <div className="text-center md:text-left text-slate-500">
-            <span>&copy; {new Date().getFullYear()} Dhivesh M. Turning Ideas Into Intelligent Real-World Experiences.</span>
+            <span>&copy; 2026 Dhivesh M. Turning Ideas Into Intelligent Real-World Experiences.</span>
           </div>
 
           {/* Social Icons */}

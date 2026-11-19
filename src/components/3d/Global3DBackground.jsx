@@ -8,6 +8,10 @@ export default function Global3DBackground() {
     const container = mountRef.current;
     if (!container) return;
 
+    let isVisible = true;
+    let animId = null;
+    const disposables = [];
+
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -18,13 +22,28 @@ export default function Global3DBackground() {
     );
     camera.position.z = 80;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
+    const canvasEl = renderer.domElement;
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      if (animId) cancelAnimationFrame(animId);
+    };
+    const handleContextRestored = () => {
+      animate();
+    };
+    canvasEl.addEventListener('webglcontextlost', handleContextLost, false);
+    canvasEl.addEventListener('webglcontextrestored', handleContextRestored, false);
+
     // 2. Particle Geometry
-    const particleCount = 200;
+    const particleCount = 180;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const scales = new Float32Array(particleCount);
@@ -48,6 +67,7 @@ export default function Global3DBackground() {
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    disposables.push(geometry);
 
     // Particle Texture via Canvas
     const canvas = document.createElement('canvas');
@@ -62,16 +82,18 @@ export default function Global3DBackground() {
     ctx.fillRect(0, 0, 32, 32);
 
     const texture = new THREE.CanvasTexture(canvas);
+    disposables.push(texture);
 
     const material = new THREE.PointsMaterial({
       size: 1.8,
       map: texture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.4,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
+    disposables.push(material);
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
@@ -88,6 +110,7 @@ export default function Global3DBackground() {
     };
 
     const handleResize = () => {
+      if (!camera || !renderer) return;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,11 +119,23 @@ export default function Global3DBackground() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('resize', handleResize);
 
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible && !animId) {
+        animate();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     // 4. Animation Loop
-    let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       const elapsedTime = clock.getElapsedTime();
 
       targetX += (mouseX - targetX) * 0.05;
@@ -116,15 +151,23 @@ export default function Global3DBackground() {
     animate();
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animId);
+      canvasEl.removeEventListener('webglcontextlost', handleContextLost);
+      canvasEl.removeEventListener('webglcontextrestored', handleContextRestored);
+      if (animId) cancelAnimationFrame(animId);
+
+      disposables.forEach((item) => {
+        if (item && typeof item.dispose === 'function') {
+          item.dispose();
+        }
+      });
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
-      geometry.dispose();
-      material.dispose();
-      texture.dispose();
+      scene.clear();
       renderer.dispose();
     };
   }, []);
@@ -132,7 +175,7 @@ export default function Global3DBackground() {
   return (
     <div
       ref={mountRef}
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-70"
+      className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-60"
     />
   );
 }
