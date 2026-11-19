@@ -167,9 +167,9 @@ export default function HandDrawnSkillFlow() {
 
     const st = ScrollTrigger.create({
       trigger: container,
-      start: 'top 85%',
-      end: 'bottom 65%',
-      scrub: 0.6,
+      start: 'top 60%',
+      end: 'bottom 90%',
+      scrub: 1.5,
       onUpdate: (self) => {
         updateRocket(self.progress);
       }
